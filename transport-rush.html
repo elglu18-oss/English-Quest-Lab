@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071b34">
+  <title>Transport Rush · Vocabulary Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="transport-rush.css">
+  <link rel="stylesheet" href="vocabulary-listen-build.css">
+  <link rel="stylesheet" href="vocabulary-recall-audio.css">
+  <link rel="stylesheet" href="navigation.css">
+</head>
+<body class="transport-page">
+  <header class="transport-nav shell">
+    <a class="nav-button" href="vocabulary.html?unit=0#activity-panel">← Back</a>
+    <div class="nav-title"><strong>Transport Rush</strong><span>Vocabulary Lab · Unit 0</span></div>
+    <div class="run-score"><strong data-sparks>0</strong><span>Brain Sparks</span></div>
+    <a class="home-button" href="index.html">Home</a>
+  </header>
+
+  <main class="transport-shell shell">
+    <section class="transport-intro" data-intro>
+      <div class="intro-copy">
+        <p class="eyebrow">Means of Transport</p>
+        <h1>Transport <span>Rush!</span></h1>
+        <p>Learn ten transport words with Ziggy, then spell, use and recall them in four missions.</p>
+        <div class="intro-stats"><span><strong>4</strong> stages</span><span><strong>10</strong> words</span><span><strong>300</strong> max sparks</span></div>
+        <p class="best-line" data-best hidden>Best result: <strong>0</strong> / 300</p>
+        <button class="primary-action" type="button" data-start>Start Transport Rush</button>
+      </div>
+      <div class="intro-visual">
+        <div class="neon-orbit" aria-hidden="true"></div>
+        <img class="intro-ziggy" src="assets/characters/ziggy-tricky.png" alt="Ziggy ready for Transport Rush" width="700" height="724">
+        <img class="intro-bus" src="assets/transport/bus.png" alt="Red bus" width="1200" height="1200">
+        <div class="speech"><strong>Ziggy</strong><span>Ready to race through ten new words?</span></div>
+      </div>
+    </section>
+
+    <section class="game-board" data-game hidden>
+      <div class="mission-strip" data-mission-strip aria-label="Mission progress"></div>
+      <div class="progress-row"><span data-mission-label>Mission 1 of 4</span><div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="40" aria-valuenow="0"><i data-progress></i></div><span data-task-label>Word 1 of 10</span></div>
+      <div class="play-layout">
+        <aside class="ziggy-console">
+          <img src="assets/characters/ziggy-tricky.png" alt="Ziggy thinking" width="700" height="724" data-ziggy>
+          <div class="ziggy-message"><strong>Ziggy</strong><p data-ziggy-message>Let’s meet the words!</p></div>
+          <div class="hard-words"><span>Words to practise</span><strong data-hard-count>0</strong><button type="button" data-clear-hard hidden>Clear list</button></div>
+        </aside>
+        <article class="mission-card">
+          <p class="mission-kicker" data-mission-name>Mission 1 · Meet the Words</p>
+          <h2 data-instruction>Study the picture and word. Listen, then continue.</h2>
+          <div class="task-area" data-task-area></div>
+          <div class="feedback" data-feedback hidden></div>
+          <div class="actions">
+            <button class="secondary-action" type="button" data-previous hidden>Previous</button>
+            <button class="secondary-action" type="button" data-clear hidden>Clear</button>
+            <button class="primary-action" type="button" data-check hidden>Check Answer</button>
+            <button class="primary-action" type="button" data-next>Next</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="result-card" data-result hidden>
+      <img src="assets/characters/ziggy-happy.png" alt="Ziggy celebrating" width="700" height="724">
+      <div><p class="eyebrow">All four missions complete</p><h2>Perfect Recall!</h2><p data-result-message></p>
+        <div class="result-score"><strong data-final-score>0</strong><span>/ 300 Brain Sparks</span></div>
+        <p class="perfect-recall-line">Perfect Recall! <strong data-perfect-recall>10 / 10</strong></p><p>Recall attempts: <strong data-recall-attempts>1</strong></p><p>Learning answers on the first try: <strong data-final-correct>0 / 20</strong></p><p>New Brain Sparks saved: <strong data-saved>+0</strong></p><p>Words saved for practice: <strong data-final-hard>0</strong></p>
+        <div class="result-actions"><button class="primary-action" type="button" data-replay>Play Again</button><a class="secondary-action" href="vocabulary.html?unit=0#activity-panel">Back to Unit 0</a></div>
+      </div>
+    </section>
+  </main>
+  <script src="vocabulary-game-rules.js"></script>
+  <script src="vocabulary-audio-files.js"></script>
+  <script src="vocabulary-audio.js"></script>
+  <script src="vocabulary-answer-normalizer.js"></script>
+  <script src="vocabulary-listen-build.js"></script>
+  <script src="transport-rush.js"></script>
+  <script src="music-control.js"></script>
+  <script src="navigation.js"></script>
+</body>
+</html>

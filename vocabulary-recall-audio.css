@@ -1,0 +1,9 @@
+.recall-audio-controls{display:flex;justify-content:center;margin:14px 0 4px}
+.listen-again{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:46px;padding:9px 18px;border:2px solid #52dcd0;border-radius:999px;color:#fff;background:#10275b;font-weight:900;cursor:pointer;transition:transform .16s,border-color .16s,box-shadow .16s}
+.listen-again:hover,.listen-again:focus-visible{transform:translateY(-2px);border-color:#ffd83d;box-shadow:0 0 20px rgba(82,220,208,.2)}
+.listen-again svg{width:23px;height:23px;fill:currentColor}
+.strict-recall-card{display:flex;flex-direction:column;align-items:stretch}
+.strict-recall-card .answer-input,.strict-recall-card .text-answer{margin-top:14px}
+.strict-recall-picture{display:flex;align-items:center;justify-content:center;min-height:280px;padding:10px;border:1px solid rgba(82,220,208,.28);border-radius:24px;background:radial-gradient(circle,rgba(38,76,128,.72),rgba(8,26,61,.88) 70%)}
+.strict-recall-picture img{display:block;width:100%;height:330px;object-fit:contain;filter:drop-shadow(0 16px 14px rgba(0,0,25,.45))}
+@media(max-width:620px){.strict-recall-picture{min-height:220px}.strict-recall-picture img{height:250px}}

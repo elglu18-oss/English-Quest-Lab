@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#30145f">
+  <title>Grammar Glitch! · Present Simple</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="grammar-glitch.css">
+  <link rel="stylesheet" href="navigation.css">
+</head>
+<body class="glitch-page">
+  <header class="game-nav shell">
+    <a class="nav-button" href="grammar.html?unit=0#activity-panel">← Back</a>
+    <div class="mission-title"><span>Grammar Glitch!</span><small>Lexi’s lab mission</small></div>
+    <div class="spark-counter" aria-label="Brain Sparks this run"><span aria-hidden="true">⚡</span><strong data-sparks>0</strong><span>Brain Sparks</span></div>
+    <a class="home-button" href="index.html"><span aria-hidden="true">⌂</span> Home</a>
+  </header>
+
+  <main class="game-shell shell">
+    <section class="game-intro" data-intro>
+      <div class="intro-character" aria-label="Lexi is ready for the mission">
+        <div class="intro-character-glow" aria-hidden="true"></div>
+        <img src="assets/characters/lexi-thinking.png.png" alt="Lexi thinking" width="1086" height="1448">
+        <div class="character-bubble intro-bubble">
+          <span>Lexi</span>
+          <p>Ready to catch some grammar glitches?</p>
+        </div>
+        <div class="machine-orb" aria-hidden="true">!</div>
+      </div>
+      <div class="intro-copy">
+        <p class="eyebrow">Grammar Lab · Unit 0 · Present Simple</p>
+        <h1>Grammar <span>Glitch!</span></h1>
+        <p class="story"><strong>Ziggy has mixed up the grammar rules!</strong> Help Lexi fix the grammar machine through five challenge rounds.</p>
+        <div class="intro-stats">
+          <div><strong>5</strong><span>rounds</span></div>
+          <div><strong>25</strong><span>tasks</span></div>
+          <div><strong>250</strong><span>max sparks</span></div>
+        </div>
+        <p class="best-score" data-best-score hidden>Best result: <strong>0</strong> / 250</p>
+        <button class="primary-button" type="button" data-start>Start Mission <span aria-hidden="true">→</span></button>
+      </div>
+    </section>
+
+    <section class="game-board" data-game hidden aria-live="polite">
+      <div class="mission-progress">
+        <div class="round-meta">
+          <p data-round-label>Round 1 of 5</p>
+          <span data-task-label>Task 1 of 5</span>
+        </div>
+        <div class="progress-track" role="progressbar" aria-label="Mission progress" aria-valuemin="0" aria-valuemax="25" aria-valuenow="0">
+          <span data-progress></span>
+        </div>
+        <div class="round-dots" data-round-dots aria-label="Five game rounds"></div>
+      </div>
+
+      <div class="lab-stage">
+        <aside class="lexi-console" aria-label="Lexi mission guide">
+          <div class="console-lights" aria-hidden="true"><span></span><span></span><span></span></div>
+          <div class="lexi-portrait">
+            <img src="assets/characters/lexi-thinking.png.png" alt="Lexi thinking" width="1086" height="1448" data-guide-image>
+            <span class="guide-online"><i></i> <b data-guide-status>Lexi online</b></span>
+          </div>
+          <div class="lexi-speech">
+            <span class="speaker-name" data-guide-name>Lexi</span>
+            <p data-lexi-message>Let’s repair the grammar machine!</p>
+          </div>
+          <div class="machine-energy">
+            <div><span>Grammar energy</span><strong data-energy-label>0%</strong></div>
+            <div class="energy-track"><span data-energy></span></div>
+            <small><i aria-hidden="true">ϟ</i> Machine core charging</small>
+          </div>
+        </aside>
+
+        <article class="challenge-card" data-challenge>
+          <div class="round-scene" aria-hidden="true">
+            <span class="scene-line"></span><span class="scene-node node-one"></span><span class="scene-node node-two"></span>
+            <span class="scene-status">System challenge</span>
+          </div>
+          <div class="challenge-heading">
+            <span class="round-icon" data-round-icon aria-hidden="true">⚙</span>
+            <div><p data-round-name>Fix the Machine</p><h2 data-instruction>Choose the correct verb form.</h2></div>
+          </div>
+          <div class="task-area" data-task-area></div>
+          <div class="feedback" data-feedback hidden></div>
+          <div class="challenge-actions">
+            <button class="secondary-button" type="button" data-reset hidden>Clear</button>
+            <button class="primary-button check-button" type="button" data-check hidden>Check Answer</button>
+          <button class="primary-button next-button" type="button" data-next disabled>Next</button>
+          </div>
+          <div class="spark-shower" data-spark-shower aria-hidden="true"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="result-screen" data-result hidden>
+      <div class="result-burst" aria-hidden="true">✦</div>
+      <p class="eyebrow">Machine restored!</p>
+      <h2>Fantastic work!</h2>
+      <p class="lexi-message" data-result-message></p>
+      <div class="score-ring"><strong data-final-score>0</strong><span>/ 250</span></div>
+      <div class="result-details">
+        <p>Correct on the first try <strong data-final-correct>0 / 25</strong></p>
+        <p>New Brain Sparks saved <strong data-saved-sparks>+0</strong></p>
+        <p>Your best result <strong data-final-best>0 / 250</strong></p>
+      </div>
+      <div class="result-actions">
+        <button class="primary-button" type="button" data-play-again>Play Again</button>
+      </div>
+      <div data-completion-lab="grammar" data-current-mission="grammarGlitchPresentSimple"></div>
+    </section>
+  </main>
+
+  <script src="mistake-booster.js"></script>
+  <script src="word-order-guidance.js"></script>
+  <script src="grammar-glitch.js"></script>
+  <script src="mission-completion.js"></script>
+  <script src="music-control.js"></script>
+  <script src="navigation.js"></script>
+</body>
+</html>

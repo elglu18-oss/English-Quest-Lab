@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#271246">
+  <title>What Should I Say? · Writing Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="what-should-i-say.css">
+  <link rel="stylesheet" href="navigation.css">
+</head>
+<body class="help-chat-page">
+  <header class="help-nav shell">
+    <a class="help-nav-button" href="writing.html?unit=0#activity-panel">← Writing Lab</a>
+    <div class="help-nav-title"><strong>What Should I Say?</strong><span>Communication · Unit 0</span></div>
+    <div class="help-sparks"><strong data-sparks>0</strong><span>Brain Sparks</span></div>
+    <a class="help-nav-button" href="index.html">Home</a>
+  </header>
+
+  <main class="help-shell shell">
+    <section class="help-intro" data-intro>
+      <div class="help-intro-copy">
+        <p class="help-eyebrow">Writing Lab · Communication</p>
+        <h1>What Should <span>I Say?</span></h1>
+        <p>Read ten everyday messages and choose the most helpful, natural reply.</p>
+        <div class="help-intro-stats"><span><strong>10</strong> situations</span><span><strong>3</strong> replies each</span><span><strong>100</strong> max sparks</span></div>
+        <p class="help-best" data-best hidden>Best result: <strong>0</strong></p>
+        <button class="help-primary" type="button" data-start>Start Chat</button>
+      </div>
+      <div class="help-intro-max"><div class="help-glow" aria-hidden="true"></div><img src="assets/characters/max-happy.png" alt="Max ready to practise communication" width="724" height="724"><div class="help-speech"><strong>Max</strong><span>Let’s choose the right words!</span></div></div>
+    </section>
+
+    <section class="help-game" data-game hidden>
+      <div class="help-progress-row"><span data-situation-label>Situation 1 of 10</span><div class="help-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"><i data-progress></i></div><span><strong data-first-try>0</strong> first try</span></div>
+      <div class="help-play-layout">
+        <aside class="max-console"><img src="assets/characters/max-thinking.png" alt="Max thinking" width="724" height="724" data-max><div class="max-bubble"><strong>Max</strong><p data-max-message>Read the situation carefully.</p></div></aside>
+        <article class="messenger-card">
+          <div class="situation-header"><span>Everyday English</span><strong data-topic>Helping with homework</strong></div>
+          <div class="max-situation"><span>Max says</span><p data-situation></p></div>
+          <div class="phone-chat" aria-label="Conversation">
+            <div class="chat-contact"><span data-contact-initial>A</span><div><strong data-speaker>Alex</strong><small>online</small></div></div>
+            <div class="incoming-message"><p data-message></p><small>now</small></div>
+          </div>
+          <fieldset class="reply-options" data-options><legend>What should you say?</legend></fieldset>
+          <div class="help-feedback" data-feedback hidden></div>
+          <div class="help-actions"><button class="help-secondary" type="button" data-check disabled>Check Answer</button><button class="help-primary" type="button" data-next disabled>Next</button></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="help-result" data-result hidden>
+      <img src="assets/characters/max-cheering.png" alt="Max cheering" width="724" height="724">
+      <div><p class="help-eyebrow">Mission complete</p><h2 data-result-title>Great communication!</h2><p data-result-message></p><div class="result-score"><strong data-final-score>0</strong><span>/ 100 Brain Sparks</span></div><p>First-try answers: <strong data-final-first>0 / 10</strong></p><p>New Brain Sparks saved: <strong data-saved>+0</strong></p><div class="result-buttons"><button class="help-primary" type="button" data-replay>Play Again</button><a class="help-secondary" href="writing.html?unit=0#activity-panel">Back to Writing Lab</a></div></div>
+    </section>
+  </main>
+  <script src="what-should-i-say.js"></script>
+  <script src="music-control.js"></script>
+  <script src="navigation.js"></script>
+</body>
+</html>

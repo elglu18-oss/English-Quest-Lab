@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071b34">
+  <title>Supermarket Mystery! · Grammar Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="food-quest.css">
+  <link rel="stylesheet" href="supermarket-shelf.css">
+  <link rel="stylesheet" href="navigation.css">
+</head>
+<body class="food-quest-page supermarket-theme">
+  <header class="quest-nav shell">
+    <a class="nav-button" href="grammar.html?unit=0#activity-panel">← Back</a>
+    <div class="quest-nav-title"><span>Supermarket Mystery!</span><small>Grammar Lab · Unit 0</small></div>
+    <div class="spark-counter" aria-label="Brain Sparks this run"><span aria-hidden="true">⚡</span><strong data-sparks>0</strong><span>Brain Sparks</span></div>
+    <a class="home-button" href="index.html"><span aria-hidden="true">⌂</span> Home</a>
+  </header>
+
+  <main class="quest-shell shell">
+    <section class="quest-intro" data-intro>
+      <div class="intro-visual supermarket-intro" aria-label="Lexi at the neon supermarket">
+        <div class="store-sign" aria-hidden="true"><span>OPEN</span><i>24/7</i></div>
+        <div class="intro-shelves" aria-hidden="true"><img class="shelf-product-art" src="assets/products/bar-of-chocolate.png" alt=""><img class="shelf-product-art" src="assets/products/bottle-of-water.png" alt=""><img class="shelf-product-art" src="assets/products/can-of-tuna.png" alt=""><img class="shelf-product-art" src="assets/products/carton-of-milk.png" alt=""></div>
+        <img src="assets/characters/lexi-thinking.png.png" alt="Lexi thinking about a supermarket mystery" width="1086" height="1448">
+        <div class="intro-speech"><strong>Lexi</strong><p>Something strange is hiding on the shelves!</p></div>
+      </div>
+      <div class="intro-copy">
+        <p class="eyebrow">Grammar Lab · Unit 0</p>
+        <h1>Supermarket <span>Mystery!</span></h1>
+        <p class="story"><strong>Explore the shop and inspect each shelf.</strong> Use there is, there are, some and any to solve every clue.</p>
+        <div class="intro-stats"><div><strong>5</strong><span>rounds</span></div><div><strong>25</strong><span>tasks</span></div><div><strong>250</strong><span>max sparks</span></div></div>
+        <p class="best-score" data-best-score hidden>Best result: <strong>0</strong> / 250</p>
+        <div class="intro-actions"><button class="primary-button" type="button" data-start>Start Mystery <span aria-hidden="true">→</span></button><a class="mission-link" href="quantity-quest.html">Try Quantity Quest!</a></div>
+      </div>
+    </section>
+
+    <section class="quest-board" data-game hidden aria-live="polite">
+      <div class="mission-progress"><div class="round-meta"><p data-round-label>Round 1 of 5</p><span data-task-label>Task 1 of 5</span></div><div class="progress-track" role="progressbar" aria-label="Mission progress" aria-valuemin="0" aria-valuemax="25" aria-valuenow="0"><span data-progress></span></div><div class="round-dots" data-round-dots></div></div>
+      <div class="quest-stage">
+        <aside class="guide-console" aria-label="Mission guide">
+          <div class="guide-portrait"><img src="assets/characters/lexi-thinking.png.png" alt="Lexi thinking" width="1086" height="1448" data-guide-image><span class="guide-online"><i></i><b data-guide-status>Lexi online</b></span></div>
+          <div class="guide-speech"><span data-guide-name>Lexi</span><p data-guide-message>Let’s inspect every clue!</p></div>
+          <div class="energy-panel"><div><span>Mystery solved</span><strong data-energy-label>0%</strong></div><div class="energy-track"><span data-energy></span></div></div>
+        </aside>
+        <article class="quest-card" data-challenge>
+          <div class="scene-status"><span data-scene-status>Supermarket scanner online</span></div>
+          <div class="challenge-heading"><span class="round-icon" data-round-icon aria-hidden="true">?</span><div><p data-round-name>Choose Some or Any</p><h2 data-instruction>Choose the word that completes the sentence.</h2></div></div>
+          <div class="task-area" data-task-area></div>
+          <div class="feedback" data-feedback hidden></div>
+          <div class="challenge-actions"><button class="secondary-button" type="button" data-reset hidden>Clear</button><button class="primary-button" type="button" data-check hidden>Check Answer</button><button class="primary-button" type="button" data-next disabled>Next</button></div>
+          <div class="spark-shower" data-spark-shower aria-hidden="true"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="result-screen" data-result hidden>
+      <div class="result-burst" aria-hidden="true">✦</div><p class="eyebrow">Mystery solved!</p><h2>Case closed!</h2><p class="result-message" data-result-message></p>
+      <div class="score-ring"><strong data-final-score>0</strong><span>/ 250</span></div>
+      <div class="result-details"><p>Correct answers <strong data-final-correct>0 / 25</strong></p><p>New Brain Sparks saved <strong data-saved-sparks>+0</strong></p><p>Your best result <strong data-final-best>0 / 250</strong></p></div>
+      <div class="result-actions"><button class="primary-button" type="button" data-play-again>Play Again</button></div>
+      <div data-completion-lab="grammar" data-current-mission="supermarketMysteryThereIsAre"></div>
+    </section>
+  </main>
+  <script src="supermarket-shelf.js"></script>
+  <script src="supermarket-mystery.js"></script>
+  <script src="food-quest-engine.js"></script>
+  <script src="mission-completion.js"></script>
+  <script src="music-control.js"></script>
+  <script src="navigation.js"></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d32">
+  <meta name="description" content="English Quest Lab — build your English step by step.">
+  <title>English Quest Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="navigation.css">
+</head>
+<body class="home-page">
+  <main class="home-shell">
+    <header class="home-heading">
+      <span class="brand-mark" aria-hidden="true">EQ</span>
+      <h1>English <span>Quest Lab</span></h1>
+      <p>Build your English step by step.</p>
+    </header>
+
+    <section class="lab-grid" aria-label="English learning labs">
+      <a class="lab-card grammar" href="grammar.html">
+        <div class="lab-image"><img src="assets/images/grammar-lab.jpg" alt="Grammar Lab with Lexi" width="1672" height="941"></div>
+        <div class="lab-card-body"><div><p>Lexi</p><h2>Grammar Lab</h2><span class="lab-play-button">PLAY <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></div>
+      </a>
+      <a class="lab-card vocabulary" href="vocabulary.html">
+        <div class="lab-image"><img src="assets/images/vocabulary-lab.jpg" alt="Vocabulary Lab with Ziggy" width="1672" height="941"></div>
+        <div class="lab-card-body"><div><p>Ziggy</p><h2>Vocabulary Lab</h2><span class="lab-play-button">PLAY <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></div>
+      </a>
+      <a class="lab-card writing" href="writing.html">
+        <div class="lab-image"><img src="assets/images/writing-lab.jpg" alt="Writing Lab with Max" width="1672" height="941"></div>
+        <div class="lab-card-body"><div><p>Max</p><h2>Writing Lab</h2><span class="lab-play-button">PLAY <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></div>
+      </a>
+    </section>
+    <section class="final-quest-entry" aria-labelledby="final-quest-title">
+      <div class="final-quest-copy">
+        <p>Unit 0 · Certification</p>
+        <h2 id="final-quest-title">Final Quest</h2>
+        <div class="final-status" data-final-status>
+          <span class="final-summary">30 tasks · 100 points · Personal certificate</span>
+          <small data-final-note>Checking laboratory progress…</small>
+          <a class="final-requirements" data-final-requirements href="final-quest.html" hidden>View requirements</a>
+        </div>
+      </div>
+      <a class="final-quest-action" data-final-action href="final-quest.html">Open Final Quest <span aria-hidden="true">→</span></a>
+    </section>
+    <section class="progress-data-tools" aria-labelledby="progress-data-title">
+      <div><h2 id="progress-data-title">Progress backup</h2><p>Export a JSON backup before migrating or restoring saved progress.</p><small data-progress-data-status aria-live="polite"></small></div>
+      <div class="progress-data-actions"><button type="button" data-nav-plain data-progress-export>Export JSON</button><button type="button" data-nav-plain data-progress-migrate>Back up &amp; migrate</button><label>Restore JSON<input type="file" accept="application/json,.json" data-progress-import></label></div>
+    </section>
+  </main>
+  <script src="music-control.js"></script>
+  <script src="navigation.js"></script>
+  <script src="progress-data.js"></script>
+  <script src="unit0-readiness.js"></script>
+  <script src="home-readiness.js"></script>
+</body>
+</html>

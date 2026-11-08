@@ -1,0 +1,208 @@
+:root {
+  --nav-gold: #ffd84d;
+  --nav-gold-2: #ffad32;
+  --nav-purple: #9b55ff;
+  --nav-purple-2: #6b31d4;
+  --nav-cyan: #30e4d0;
+  --nav-cyan-2: #10afbd;
+  --nav-dark: #17103e;
+}
+
+.nav-home.nav-home,
+.nav-back.nav-back,
+.nav-next.nav-next {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 11px 20px;
+  border: 0;
+  border-radius: 16px;
+  font-family: "Nunito", sans-serif;
+  font-size: .92rem;
+  font-weight: 1000;
+  line-height: 1;
+  letter-spacing: .055em;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform .18s ease, filter .18s ease, box-shadow .18s ease, opacity .18s ease;
+}
+
+.nav-home.nav-home {
+  color: #27183d;
+  background: linear-gradient(135deg, #fff07a, var(--nav-gold) 46%, var(--nav-gold-2));
+  box-shadow: 0 10px 26px rgba(255, 190, 55, .28), 0 0 18px rgba(255, 216, 77, .18), inset 0 1px rgba(255,255,255,.62);
+}
+
+.nav-back.nav-back {
+  color: #fff;
+  background: linear-gradient(135deg, #ba78ff, var(--nav-purple) 42%, var(--nav-purple-2));
+  box-shadow: 0 10px 25px rgba(111, 49, 212, .34), 0 0 16px rgba(155, 85, 255, .18), inset 0 1px rgba(255,255,255,.28);
+}
+
+.nav-next.nav-next {
+  min-width: 142px;
+  color: #072d35;
+  background: linear-gradient(135deg, #7affea, var(--nav-cyan) 44%, var(--nav-cyan-2));
+  box-shadow: 0 11px 28px rgba(32, 213, 203, .3), 0 0 17px rgba(48, 228, 208, .2), inset 0 1px rgba(255,255,255,.5);
+}
+
+.glitch-page .nav-next.nav-next,
+.food-quest-page:not(.containers-theme) .nav-next.nav-next {
+  color: #fff;
+  background: linear-gradient(135deg, #c991ff, var(--nav-purple) 48%, var(--nav-purple-2));
+  box-shadow: 0 11px 28px rgba(111, 49, 212, .34), 0 0 17px rgba(155, 85, 255, .2);
+}
+
+.nav-home svg,
+.nav-back svg {
+  width: 21px;
+  height: 21px;
+  flex: 0 0 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.nav-next::after {
+  content: "→";
+  font-size: 1.28em;
+  line-height: .8;
+  transition: transform .18s ease;
+}
+
+.nav-home:hover,
+.nav-back:hover,
+.nav-next:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.035);
+  filter: brightness(1.08) saturate(1.08);
+}
+
+.nav-home:hover { box-shadow: 0 14px 32px rgba(255,190,55,.38), 0 0 26px rgba(255,216,77,.26); }
+.nav-back:hover { box-shadow: 0 14px 32px rgba(111,49,212,.44), 0 0 24px rgba(155,85,255,.25); }
+.nav-next:hover:not(:disabled) { box-shadow: 0 15px 34px rgba(32,213,203,.4), 0 0 25px rgba(48,228,208,.28); }
+.nav-next:hover:not(:disabled)::after { transform: translateX(3px); }
+
+.nav-home:active,
+.nav-back:active,
+.nav-next:active:not(:disabled) {
+  transform: translateY(1px) scale(.975);
+  filter: brightness(.96);
+  box-shadow: 0 5px 13px rgba(0,0,0,.26);
+}
+
+.nav-home:focus-visible,
+.nav-back:focus-visible,
+.nav-next:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+.nav-next:disabled,
+.nav-next[aria-disabled="true"] {
+  color: rgba(218, 238, 240, .62);
+  background: linear-gradient(135deg, #3f5962, #263d4a);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.1);
+  filter: grayscale(.35);
+  opacity: .62;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.lab-play-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: min(230px, 100%);
+  min-height: 58px;
+  margin-top: 15px;
+  padding: 12px 25px;
+  border-radius: 18px;
+  color: #fff;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 78%, white), var(--accent) 56%, color-mix(in srgb, var(--accent) 75%, #111));
+  box-shadow: 0 13px 30px color-mix(in srgb, var(--accent) 34%, transparent), 0 0 23px color-mix(in srgb, var(--accent) 22%, transparent), inset 0 1px rgba(255,255,255,.34);
+  font-size: 1.15rem;
+  font-weight: 1000;
+  letter-spacing: .09em;
+  transition: transform .2s ease, filter .2s ease, box-shadow .2s ease;
+}
+
+.lab-play-button svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform .2s ease;
+}
+
+.lab-card:hover .lab-play-button {
+  transform: scale(1.045);
+  filter: brightness(1.1) saturate(1.12);
+  box-shadow: 0 16px 36px color-mix(in srgb, var(--accent) 42%, transparent), 0 0 31px color-mix(in srgb, var(--accent) 28%, transparent);
+}
+.lab-card:hover .lab-play-button svg { transform: translateX(4px); }
+.lab-card:active .lab-play-button { transform: translateY(2px) scale(.98); filter: brightness(.96); }
+
+@media (max-width: 720px) {
+  .nav-home.nav-home,
+  .nav-back.nav-back { min-height: 48px; padding: 10px 13px; font-size: .82rem; }
+  .nav-next.nav-next { width: 100%; min-height: 52px; }
+  .wm-nav { grid-template-columns: auto 1fr auto !important; }
+  .wm-nav>p { display: none !important; }
+  .help-nav { grid-template-columns: auto 1fr auto !important; }
+  .help-sparks { display: none !important; }
+  .transport-nav { grid-template-columns: auto 1fr auto !important; }
+  .transport-nav .run-score { display: none !important; }
+  .quest-nav,
+  .game-nav { grid-template-columns: auto 1fr auto !important; }
+  .quest-nav .spark-counter,
+  .game-nav .spark-counter { display: none !important; }
+}
+
+@media (max-width: 460px) {
+  html,
+  body { overflow-x: hidden; }
+  .nav-home.nav-home,
+  .nav-back.nav-back { gap: 7px; padding-inline: 11px; border-radius: 14px; }
+  .nav-home svg,
+  .nav-back svg { width: 18px; height: 18px; flex-basis: 18px; }
+  .lab-play-button { width: 100%; min-height: 56px; }
+  .wm-nav,
+  .help-nav,
+  .transport-nav,
+  .quest-nav,
+  .game-nav { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important; }
+  .wm-nav>div,
+  .help-nav-title,
+  .transport-nav .nav-title,
+  .quest-nav-title,
+  .game-nav .mission-title { display: none !important; }
+  .wm-nav .nav-home,
+  .wm-nav .nav-back,
+  .help-nav .nav-home,
+  .help-nav .nav-back,
+  .transport-nav .nav-home,
+  .transport-nav .nav-back,
+  .quest-nav .nav-home,
+  .quest-nav .nav-back,
+  .game-nav .nav-home,
+  .game-nav .nav-back { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-home,
+  .nav-back,
+  .nav-next,
+  .lab-play-button,
+  .lab-play-button svg { transition: none !important; }
+}
+

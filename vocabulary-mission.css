@@ -1,0 +1,8 @@
+.generic-cover{position:absolute;left:-4%;bottom:3%;width:65%;height:70%;object-fit:contain;filter:drop-shadow(0 18px 24px #0008)}
+.generic-vocabulary-page .mission-card::before{content:none}
+.strict-failure{display:grid;justify-items:center;gap:12px;margin-top:14px;text-align:center}
+.use-context-card{display:grid;justify-items:center;gap:10px;max-width:720px;margin:0 auto 22px;padding:clamp(20px,4vw,34px);border:1px solid rgba(82,220,208,.42);border-radius:22px;background:radial-gradient(circle at 50% 0,rgba(82,220,208,.13),transparent 68%),rgba(7,20,55,.72);text-align:center}
+.use-context-card>span{color:#65efff;font-size:.78rem;font-weight:900;text-transform:uppercase;letter-spacing:.1em}
+.use-context-card p{margin:0;color:#fff;font:800 clamp(1.45rem,3.2vw,2rem)/1.28 "Baloo 2",sans-serif}
+.use-context-card p b{color:#ffd84d}
+@media(max-width:560px){.generic-cover{left:-8%;bottom:0;width:72%;height:66%}}

@@ -1,0 +1,122 @@
+.music-control {
+  position: relative;
+  z-index: 80;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 0 auto;
+  font-family: "Nunito", system-ui, sans-serif;
+}
+
+.music-control.is-floating {
+  position: fixed;
+  top: max(12px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+}
+
+.music-toggle,
+.music-settings-button {
+  border: 1px solid rgba(255, 221, 96, .78);
+  color: #fff8cf;
+  background: linear-gradient(135deg, #7b35f5 0%, #4f1bb7 58%, #d69d22 145%);
+  box-shadow: 0 8px 22px rgba(94, 42, 208, .34), inset 0 1px rgba(255,255,255,.22);
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+
+.music-toggle {
+  flex: 0 0 auto;
+  min-width: 118px;
+  min-height: 44px;
+  padding: 9px 13px;
+  border-radius: 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: 900 .76rem/1 "Nunito", system-ui, sans-serif;
+  letter-spacing: .055em;
+  white-space: nowrap;
+}
+
+.music-toggle [data-music-label] { display: inline !important; }
+
+.music-settings-button {
+  width: 42px;
+  height: 42px;
+  padding: 9px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+}
+
+.music-toggle svg,
+.music-settings-button svg,
+.music-panel-close svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.music-control[data-enabled="false"] .music-toggle {
+  color: #e8e1fa;
+  filter: saturate(.72);
+  background: linear-gradient(135deg, #4b3a70, #292348);
+  border-color: rgba(219, 204, 255, .42);
+  box-shadow: 0 7px 18px rgba(12, 8, 34, .3);
+}
+
+.music-toggle:hover,
+.music-settings-button:hover {
+  transform: translateY(-2px) scale(1.025);
+  filter: brightness(1.12);
+  box-shadow: 0 11px 28px rgba(111, 54, 238, .44), 0 0 18px rgba(255, 202, 63, .19);
+}
+
+.music-toggle:active,
+.music-settings-button:active { transform: translateY(1px) scale(.98); }
+.music-toggle:focus-visible,
+.music-settings-button:focus-visible,
+.music-panel-close:focus-visible,
+.music-volume:focus-visible { outline: 3px solid #ffe06a; outline-offset: 3px; }
+
+.music-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: min(290px, calc(100vw - 24px));
+  padding: 17px;
+  border: 1px solid rgba(255, 220, 91, .55);
+  border-radius: 20px;
+  color: #fff;
+  background: linear-gradient(155deg, rgba(42, 20, 92, .98), rgba(12, 18, 55, .98));
+  box-shadow: 0 18px 48px rgba(5, 7, 28, .48), inset 0 1px rgba(255,255,255,.13);
+  backdrop-filter: blur(14px);
+}
+
+.music-panel[hidden] { display: none; }
+.music-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 15px; }
+.music-panel-head strong { color: #ffe173; font-size: 1rem; }
+.music-panel-close { width: 34px; height: 34px; padding: 7px; border: 0; border-radius: 10px; color: #fff; background: rgba(255,255,255,.1); cursor: pointer; }
+.music-panel-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 10px 0; font-weight: 800; }
+.music-panel-toggle { min-width: 74px; padding: 8px 10px; border: 1px solid #e8c951; border-radius: 12px; color: #28124d; background: #ffd95c; font: 900 .76rem/1 "Nunito", sans-serif; cursor: pointer; }
+.music-volume-wrap { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px; margin-top: 10px; }
+.music-volume { width: 100%; accent-color: #ffd95c; cursor: pointer; }
+.music-volume-value { min-width: 42px; color: #ffe173; font-weight: 900; text-align: right; }
+.music-panel-note { margin: 11px 0 0; color: #cbc4e4; font-size: .76rem; line-height: 1.35; }
+
+@media (max-width: 720px) {
+  header:has(> .music-control) { flex-wrap: wrap; }
+  header > .music-control { margin-left: auto; }
+  .music-toggle { min-height: 40px; padding: 8px 10px; font-size: .69rem; }
+  .music-settings-button { width: 40px; height: 40px; }
+  .music-control.is-floating { top: 8px; right: 8px; }
+  .music-panel { position: fixed; top: 62px; right: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .music-toggle, .music-settings-button { transition: none; }
+}
