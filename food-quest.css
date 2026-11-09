@@ -123,9 +123,11 @@
 .answer-lane { display: flex; flex-wrap: wrap; align-content: center; justify-content: center; gap: 8px; min-height: 82px; margin-bottom: 15px; padding: 13px; border: 2px dashed color-mix(in srgb,var(--round-a) 40%,transparent); border-radius: 17px; background: rgba(4,8,36,.48); }
 .answer-lane:empty::after { content: "Tap the words in the correct order"; color: #8f9abd; font-size: .82rem; }
 .word-bank { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
-.word-button { min-height: 43px; padding: 7px 14px; border: 1px solid color-mix(in srgb,var(--round-a) 35%,rgba(255,255,255,.1)); color: #fff; background: #242252; box-shadow: 0 3px 0 color-mix(in srgb,var(--round-dark) 65%,#07091f); }
+.word-button { min-height: 43px; padding: 7px 14px; border: 1px solid color-mix(in srgb,var(--round-a) 35%,rgba(255,255,255,.1)); color: #fff; background: #242252; box-shadow: 0 3px 0 color-mix(in srgb,var(--round-dark) 65%,#07091f); touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 .word-button.is-used { opacity: .2; pointer-events: none; transform: scale(.92); }
 .answer-lane .word-button { color: #0b1831; background: linear-gradient(145deg,var(--round-b),var(--round-a)); }
+.answer-lane .word-button.is-step-correct { border-color: #9affd7; color: #06271d; background: linear-gradient(145deg,#8df3cb,#43cf99); box-shadow: 0 3px 0 #187358,0 0 20px rgba(86,230,177,.28); }
+.word-button.is-order-wrong { border-color: #ff9aaa; color: #fff; background: #d95073; box-shadow: 0 3px 0 #76233f,0 0 18px rgba(217,80,115,.35); animation: order-wrong-flash .6s ease; }
 .text-answer { display: block; width: min(100%,580px); min-height: 59px; margin: 0 auto; padding: 0 17px; border: 2px solid color-mix(in srgb,var(--round-a) 44%,transparent); border-radius: 15px; color: #fff; background: rgba(5,8,37,.65); font: 800 1.03rem "Nunito",sans-serif; }
 .text-answer:focus { border-color: var(--round-b); outline: 3px solid color-mix(in srgb,var(--round-a) 14%,transparent); }
 .answer-hint { margin: 9px 0 0; color: #9da8c9; font-size: .75rem; text-align: center; }
@@ -159,6 +161,7 @@
 
 @keyframes card-shake { 25% { transform: translateX(-7px); } 50% { transform: translateX(6px); } 75% { transform: translateX(-3px); } }
 @keyframes success-glow { 35% { border-color: #75efbf; box-shadow: 0 0 48px rgba(86,230,177,.3),0 24px 65px rgba(0,0,25,.35); } }
+@keyframes order-wrong-flash { 35% { transform: translateY(1px) scale(.98); } }
 @keyframes spark-pop { from { opacity: 1; transform: translate(0,0) rotate(45deg) scale(.2); } to { opacity: 0; transform: translate(var(--spark-dx),var(--spark-dy)) rotate(180deg) scale(1.15); } }
 @keyframes result-float { 50% { transform: translateY(-7px) rotate(4deg); } }
 
@@ -223,6 +226,6 @@
   .scene-item b { font-size: 1.65rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .result-burst,.quest-card.is-wrong,.quest-card.is-correct,.spark-particle { animation: none; }
+  .result-burst,.quest-card.is-wrong,.quest-card.is-correct,.spark-particle,.word-button.is-order-wrong { animation: none; }
   .guide-portrait img { transition: none; }
 }

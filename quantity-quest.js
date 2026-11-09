@@ -104,14 +104,14 @@
   ];
 
   const askAnswer = [
-    { type: 'order', prompt: 'Build the question.', words: ['How many', 'apples', 'are', 'in the basket'], answer: 'How many apples are in the basket?', explanation: 'Use How many + plural noun + are.' },
-    { type: 'order', prompt: 'Build the question.', words: ['How much', 'milk', 'is', 'in the fridge'], answer: 'How much milk is in the fridge?', explanation: 'Use How much with uncountable milk.' },
-    { type: 'order', prompt: 'Build the answer.', words: ['There', 'are', 'six', 'eggs'], answer: 'There are six eggs.', explanation: 'Use there are with a plural quantity.' },
-    { type: 'order', prompt: 'Build the question.', words: ['How many', 'bottles of water', 'do', 'we need'], answer: 'How many bottles of water do we need?', explanation: 'Count the bottles, so use how many.' },
-    { type: 'order', prompt: 'Build the answer.', words: ['We', 'need', 'two', 'cartons'], answer: 'We need two cartons.', explanation: 'Two comes before the plural container cartons.' },
-    { type: 'order', prompt: 'Build the question.', words: ['How much', 'rice', 'have', 'we got'], answer: 'How much rice have we got?', explanation: 'Rice is uncountable, so use how much.' },
-    { type: 'order', prompt: 'Build the answer.', words: ['There', 'is', 'a little', 'cheese'], answer: 'There is a little cheese.', explanation: 'A little is used with uncountable cheese.' },
-    { type: 'order', prompt: 'Build the question.', words: ['How many', 'sandwiches', 'are', 'there'], answer: 'How many sandwiches are there?', explanation: 'Sandwiches are countable and plural.' },
+    { type: 'order', prompt: 'Build the question.', words: ['How many', 'apples', 'are', 'in the basket'], answer: 'How many apples are in the basket?', orderHint: 'Start with the question phrase and noun. Put the verb before the place phrase.', explanation: 'Use How many + plural noun + are.' },
+    { type: 'order', prompt: 'Build the question.', words: ['How much', 'milk', 'is', 'in the fridge'], answer: 'How much milk is in the fridge?', orderHint: 'Start with the question phrase and noun. Put the verb before the place phrase.', explanation: 'Use How much with uncountable milk.' },
+    { type: 'order', prompt: 'Build the answer.', words: ['There', 'are', 'six', 'eggs'], answer: 'There are six eggs.', orderHint: 'Start with There and the verb. Put the number before the plural noun.', explanation: 'Use there are with a plural quantity.' },
+    { type: 'order', prompt: 'Build the question.', words: ['How many', 'bottles of water', 'do', 'we need'], answer: 'How many bottles of water do we need?', orderHint: 'Start with the question phrase and noun. Then use the helper verb before the subject.', explanation: 'Count the bottles, so use how many.' },
+    { type: 'order', prompt: 'Build the answer.', words: ['We', 'need', 'two', 'cartons'], answer: 'We need two cartons.', orderHint: 'Start with the subject and verb. Put the number before the plural noun.', explanation: 'Two comes before the plural container cartons.' },
+    { type: 'order', prompt: 'Build the question.', words: ['How much', 'rice', 'have', 'we got'], answer: 'How much rice have we got?', orderHint: 'Start with the question phrase and noun. Put the helper verb before the subject.', explanation: 'Rice is uncountable, so use how much.' },
+    { type: 'order', prompt: 'Build the answer.', words: ['There', 'is', 'a little', 'cheese'], answer: 'There is a little cheese.', orderHint: 'Start with There and the verb. Put the quantity phrase before the food noun.', explanation: 'A little is used with uncountable cheese.' },
+    { type: 'order', prompt: 'Build the question.', words: ['How many', 'sandwiches', 'are', 'there'], answer: 'How many sandwiches are there?', orderHint: 'Start with the question phrase and noun. Then put the verb before there.', explanation: 'Sandwiches are countable and plural.' },
     { type: 'input', prompt: 'Complete the question:\nHow ___ sugar is there?', answer: 'much', explanation: 'Sugar is uncountable.' },
     { type: 'input', prompt: 'Complete the question:\nHow ___ bananas do you want?', answer: 'many', explanation: 'Bananas are countable and plural.' },
     { type: 'input', prompt: 'Complete the answer:\nThere ___ four tins of beans.', answer: 'are', explanation: 'Use are with plural tins.' },
@@ -192,7 +192,7 @@
       { name: 'How Much or How Many?', icon: '?', instruction: 'Choose the correct question starter.', status: 'Noun scanner active', theme: 'count', guide: max('First decide whether the noun is countable or uncountable.'), bank: muchMany },
       { name: 'Count the Food', icon: '#', instruction: PICTURE_PROMPT, status: 'Food counter active', theme: 'count', guide: lexi('Count every item, then choose the one sentence that matches.', 'Count the pictured items again—the sentence must match exactly!'), bank: countFood },
       { name: 'Packaging Station', icon: '▣', instruction: 'Match every product to the right Unit 0 container.', status: 'Ziggy’s packing line active', theme: 'pack', guide: ziggy('Focus on container + of + product. Both a and the are accepted in complete phrases.'), bank: packagingStation },
-      { name: 'Ask & Answer', icon: '↔', instruction: 'Build or complete a quantity question and answer.', status: 'Question link active', theme: 'ask', guide: lexi('Use the noun to choose the question pattern.'), bank: askAnswer },
+      { name: 'Ask & Answer', icon: '↔', instruction: 'Build or complete a quantity question and answer.', status: 'Question link active', theme: 'ask', guidedWordOrder: true, guide: lexi('Use the noun to choose the question pattern.'), bank: askAnswer },
       { name: 'Quantity Boss', icon: '★', instruction: 'Combine counting, containers and questions.', status: 'Boss scanner active', theme: 'boss', guide: ziggy('My final quantity tricks mix every skill!'), bank: boss }
     ]
   };

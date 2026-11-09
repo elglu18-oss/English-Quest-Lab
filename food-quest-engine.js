@@ -58,6 +58,9 @@
 
   let state = {};
   let guideTimer;
+  let soundSerial = 0;
+
+  const sound = (name) => window.ENGLISH_QUEST_MUSIC?.playEffect(name, `${config.gameKey}:word:${++soundSerial}`);
 
   const shuffle = (items) => {
     const copy = [...items];
@@ -157,6 +160,11 @@
 
   const currentRound = () => config.rounds[state.roundIndex];
   const currentTask = () => state.selectedRounds[state.roundIndex][state.taskIndex];
+  const guidedOrderActive = () => Boolean(
+    currentRound().guidedWordOrder
+    && currentTask().type === 'order'
+    && window.ENGLISH_QUEST_WORD_ORDER
+  );
 
   const updateEnergy = (completed) => {
     const percent = Math.round((completed / TOTAL_TASKS) * 100);
@@ -242,22 +250,63 @@
   };
 
   const addWord = (index, sourceButton) => {
-    if (state.answered || state.orderSelection.includes(index)) return;
+    if (state.answered || state.orderSelection.includes(index) || sourceButton.dataset.orderFeedbackLocked === 'true') return;
+    const task = currentTask();
+    if (guidedOrderActive() && !window.ENGLISH_QUEST_WORD_ORDER.allows(task, state.orderSelection, index)) {
+      sourceButton.dataset.orderFeedbackLocked = 'true';
+      sourceButton.disabled = true;
+      state.hadMistake = true;
+      state.orderErrors += 1;
+      sound('incorrect');
+      sourceButton.classList.remove('is-order-wrong');
+      void sourceButton.offsetWidth;
+      sourceButton.classList.add('is-order-wrong');
+      window.setTimeout(() => {
+        sourceButton.classList.remove('is-order-wrong');
+        if (sourceButton.isConnected && !state.answered) sourceButton.disabled = false;
+        delete sourceButton.dataset.orderFeedbackLocked;
+      }, 600);
+      const guide = currentRound().guide;
+      const showHint = state.orderErrors >= 2;
+      const message = showHint ? task.orderHint : 'Think about which word belongs in this position.';
+      updateGuide(guide.wrong, `${guide.name} giving a word-order hint`, guide.name, message);
+      elements.feedback.className = 'feedback wrong';
+      elements.feedback.innerHTML = `<strong>${showHint ? `${escapeHtml(guide.name)}’s hint` : 'Try another word'}</strong><p>${escapeHtml(message)} No Brain Sparks are awarded after an incorrect choice.</p>`;
+      elements.feedback.hidden = false;
+      return;
+    }
     state.orderSelection.push(index);
     sourceButton.classList.add('is-used');
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = 'word-button';
+    button.className = `word-button${guidedOrderActive() ? ' is-step-correct' : ''}`;
     button.dataset.selectedIndex = String(index);
     button.textContent = currentTask().words[index];
     button.addEventListener('click', () => removeWord(index));
     elements.taskArea.querySelector('[data-answer-lane]').append(button);
     refreshOrderPunctuation();
     elements.check.disabled = state.orderSelection.length !== currentTask().words.length;
+    if (guidedOrderActive()) {
+      sound('correct');
+      const guide = currentRound().guide;
+      updateGuide(guide.happy, `${guide.name} approving a word`, guide.name, state.orderSelection.length === task.words.length ? 'Great! Now check the complete sentence.' : 'Good choice. What comes next?');
+      if (state.orderErrors < 2) elements.feedback.hidden = true;
+    }
   };
 
   const removeWord = (index) => {
     if (state.answered) return;
+    if (guidedOrderActive()) {
+      const position = state.orderSelection.indexOf(index);
+      const removed = state.orderSelection.splice(position);
+      removed.forEach((wordIndex) => {
+        elements.taskArea.querySelector(`[data-selected-index="${wordIndex}"]`)?.remove();
+        elements.taskArea.querySelector(`[data-word-index="${wordIndex}"]`)?.classList.remove('is-used');
+      });
+      refreshOrderPunctuation();
+      elements.check.disabled = true;
+      return;
+    }
     state.orderSelection = state.orderSelection.filter((item) => item !== index);
     elements.taskArea.querySelector(`[data-selected-index="${index}"]`)?.remove();
     elements.taskArea.querySelector(`[data-word-index="${index}"]`)?.classList.remove('is-used');
@@ -554,6 +603,7 @@
     const guide = round.guide;
     state.answered = false;
     state.hadMistake = false;
+    state.orderErrors = 0;
     state.orderSelection = [];
     state.matchSelection = [];
     state.basketInstances = [];
@@ -595,7 +645,7 @@
   const answerIsCorrect = (task, answer) => {
     if (task.type === 'match') return task.pairs.every((pair, index) => normalize(answer[index]) === normalize(pair.answer));
     if (task.type === 'containerRecall') return task.items.every((item, index) => (item.accepted || [item.full]).some((accepted) => normalize(answer[index]) === normalize(accepted)));
-    const accepted = [task.answer, ...(task.alternatives || [])].map(normalize);
+    const accepted = [task.answer, ...(task.alternatives || []), ...(task.accepted || [])].map(normalize);
     return accepted.includes(normalize(answer));
   };
 
@@ -656,7 +706,7 @@
     if (correct) {
       const earnsSparks = !state.hadMistake;
       if (earnsSparks) state.score += SPARKS_PER_TASK;
-      state.correct += 1;
+      if (!guidedOrderActive() || earnsSparks) state.correct += 1;
       elements.sparks.textContent = String(state.score);
       elements.challenge.classList.add('is-correct');
       updateGuide(guide.happy, `${guide.name} celebrating`, guide.name, guide.correct);
@@ -766,6 +816,8 @@
       score: 0,
       correct: 0,
       answered: false,
+      hadMistake: false,
+      orderErrors: 0,
       orderSelection: [],
       matchSelection: [],
       basketInstances: [],
