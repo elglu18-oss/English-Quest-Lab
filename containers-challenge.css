@@ -7,7 +7,6 @@
 .containers-theme .answer-hint, .containers-theme .listen-build-toolbar, .containers-theme .listen-again, .containers-theme .text-answer { font-size: max(1rem,16px); }
 .containers-theme .quest-board, .containers-theme .quest-stage, .containers-theme .guide-console, .containers-theme .quest-card, .containers-theme .task-area, .containers-theme .challenge-heading > div, .containers-theme .guide-speech, .containers-theme .spelling-work, .containers-theme .recall-copy, .containers-theme .listen-build { min-width: 0; max-width: 100%; }
 .containers-theme .challenge-heading h2, .containers-theme .guide-speech p, .containers-theme .feedback, .containers-theme .round-prompt, .containers-theme .answer-hint { overflow-wrap: anywhere; }
-.containers-theme img.is-image-retrying, .containers-theme img.is-image-unavailable { visibility: hidden; }
 .containers-intro { min-height: 600px; }
 .containers-intro > img { z-index: 2; height: min(510px, 52vw); margin-left: 22%; }
 .intro-mini-shelf { position: absolute; z-index: 1; left: 0; right: 2%; bottom: 4%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; padding: 12px 12px 17px; border: 1px solid rgba(101,239,255,.35); border-bottom: 9px solid #253869; border-radius: 19px; background: linear-gradient(165deg, rgba(7,20,54,.94), rgba(16,29,75,.88)); box-shadow: 0 0 44px rgba(32,223,197,.16); }

@@ -19,6 +19,7 @@ body { margin: 0; min-width: 320px; min-height: 100vh; color: var(--ink); backgr
 body::before { content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .16; background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px); background-size: 48px 48px; mask-image: linear-gradient(black, transparent 80%); }
 a { color: inherit; }
 button { font: inherit; }
+img.is-image-retrying, img.is-image-unavailable { visibility: hidden; }
 .shell { width: min(1120px, calc(100% - 40px)); margin-inline: auto; }
 h1, h2, h3, p { margin-top: 0; }
 h1, h2, h3 { font-family: "Baloo 2", system-ui, sans-serif; }
