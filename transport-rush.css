@@ -9,8 +9,8 @@
 /* Keep each transport illustration in its own paint layer. Some supplied PNGs
    contain narrow remnants from their original source sheet; the item-specific
    masks hide only those remnants while preserving the complete vehicle. */
-.transport-showcase{position:relative;isolation:isolate;contain:layout paint;overflow:hidden}
-.transport-showcase .transport-image{position:absolute;z-index:1;inset:12px;display:block;width:calc(100% - 24px);height:calc(100% - 24px);max-width:calc(100% - 24px);max-height:calc(100% - 24px);margin:auto;object-fit:contain;object-position:center}
+.transport-showcase{position:relative;isolation:isolate;overflow:hidden}
+.transport-showcase .transport-image{position:relative;z-index:1;inset:auto;display:block;flex:0 1 auto;width:100%;height:100%;max-width:100%;max-height:100%;margin:auto;object-fit:contain;object-position:center}
 .transport-showcase[data-transport="boat"] .transport-image{clip-path:inset(0 0 0 14.5%);transform:translateX(-4%)}
 .transport-showcase[data-transport="taxi"] .transport-image{clip-path:inset(0 0 0 18.5%);transform:translateX(-6%)}
 .transport-showcase[data-transport="car"] .transport-image{clip-path:inset(0 0 11% 0);transform:translateY(3%)}
