@@ -2,6 +2,17 @@
   'use strict';
   const STORAGE_KEY = 'englishQuestLab.progress.v1';
   const BACKUP_KEY = 'englishQuestLab.progress.backup.v1';
+  const TRANSFER_FORMAT = 'englishQuestLab.progress.transfer.v2';
+  const TRANSFER_BACKUP_KEY = 'englishQuestLab.progress.importBackup.v2';
+  const APP_PREFIX = 'englishQuestLab.';
+  const KNOWN_STORAGE_KEYS = [
+    STORAGE_KEY,
+    'englishQuestLab.finalQuest.v1',
+    'englishQuestLab.mistakeBooster.v1',
+    'englishQuestLab.music.v1',
+    'englishQuestLab.unit1.certificate.studentName',
+    'englishQuestLab.whatShouldISay.attempt.v1'
+  ];
   const MIGRATION_ID = 'unit0ConfirmedScoresV2';
   const MIGRATION_VERSION = 3;
   const TOTALS = {
@@ -106,6 +117,77 @@
     setTimeout(() => URL.revokeObjectURL(url), 0);
   };
   const exportProgress = () => { const envelope = exportEnvelope(); downloadJson(envelope); return envelope; };
+  const collectAppStorage = () => {
+    const keys = new Set(KNOWN_STORAGE_KEYS);
+    try { for (let index = 0; index < localStorage.length; index += 1) keys.add(localStorage.key(index)); } catch { /* restricted storage can omit enumeration */ }
+    const storage = {};
+    keys.forEach(key => {
+      if (typeof key !== 'string' || !key.startsWith(APP_PREFIX) || key === BACKUP_KEY || key === TRANSFER_BACKUP_KEY) return;
+      const value = localStorage.getItem(key);
+      if (value !== null) storage[key] = value;
+    });
+    return storage;
+  };
+  const exportTransferEnvelope = () => ({
+    format: TRANSFER_FORMAT,
+    exportedAt: new Date().toISOString(),
+    source: typeof location === 'undefined' ? '' : `${location.protocol}//${location.host || 'local-file'}`,
+    storage: collectAppStorage()
+  });
+  const exportTransfer = () => {
+    const envelope = exportTransferEnvelope();
+    downloadJson(envelope, `english-quest-complete-progress-${new Date().toISOString().slice(0, 10)}.json`);
+    return envelope;
+  };
+  const normalizeTransfer = value => {
+    let storage;
+    if (value?.format === TRANSFER_FORMAT && value.storage && typeof value.storage === 'object' && !Array.isArray(value.storage)) storage = value.storage;
+    else {
+      const progress = value?.progress ?? value;
+      if (!progress || typeof progress !== 'object' || Array.isArray(progress)) throw new Error('This is not an English Quest Lab progress file.');
+      storage = { [STORAGE_KEY]: JSON.stringify(progress) };
+    }
+    const safe = {};
+    Object.entries(storage).forEach(([key, raw]) => {
+      if (!key.startsWith(APP_PREFIX) || key === BACKUP_KEY || key === TRANSFER_BACKUP_KEY || typeof raw !== 'string') throw new Error('The progress file contains unsupported data.');
+      if (key !== 'englishQuestLab.unit1.certificate.studentName') {
+        try { JSON.parse(raw); } catch { throw new Error(`Saved data for ${key} is damaged.`); }
+      }
+      safe[key] = raw;
+    });
+    if (!safe[STORAGE_KEY]) throw new Error('The progress file does not contain learning progress.');
+    return safe;
+  };
+  const transferSummary = storage => {
+    let progress = {};
+    try { progress = JSON.parse(storage?.[STORAGE_KEY] || '{}') || {}; } catch { /* normalizeTransfer reports malformed imports */ }
+    const games = progress.games && typeof progress.games === 'object' ? progress.games : {};
+    const stages = key => new Set(Array.isArray(games[key]?.stageProgress) ? games[key].stageProgress : []).size;
+    const final = games.unit1FinalVocabularyChallenge || {};
+    const attempts = Array.isArray(final.completedAttempts) ? final.completedAttempts.length : Number(final.attempts || final.plays || 0);
+    return {
+      brainSparks: Number(progress.brainSparks) || 0,
+      householdStages: stages('unit1HouseholdChoresVocabulary'),
+      personalityStages: stages('unit1PersonalityAdjectivesVocabulary'),
+      finalCompleted: final.completed === true || Boolean(final.lastAttempt || final.firstCompletedAttempt),
+      finalAttempts: attempts,
+      studentName: String(storage?.['englishQuestLab.unit1.certificate.studentName'] || '').trim(),
+      keyCount: Object.keys(storage || {}).length
+    };
+  };
+  const prepareTransferImport = value => {
+    const storage = normalizeTransfer(value);
+    const currentStorage = collectAppStorage();
+    return { storage, imported: transferSummary(storage), current: transferSummary(currentStorage) };
+  };
+  const applyTransferImport = prepared => {
+    if (!prepared?.storage || typeof prepared.storage !== 'object') throw new Error('Import was not prepared safely.');
+    const backup = exportTransferEnvelope();
+    localStorage.setItem(TRANSFER_BACKUP_KEY, JSON.stringify(backup));
+    downloadJson(backup, `english-quest-before-import-${new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)}.json`);
+    Object.entries(prepared.storage).forEach(([key, raw]) => localStorage.setItem(key, raw));
+    return { backup, imported: transferSummary(prepared.storage) };
+  };
   const migrateStoredProgress = () => {
     const current = parseStored();
     if (Number(current.migrations?.[MIGRATION_ID]?.version) >= MIGRATION_VERSION) return { changed: false, progress: current };
@@ -123,7 +205,8 @@
     return progress;
   };
   window.ENGLISH_QUEST_PROGRESS_DATA = {
-    STORAGE_KEY, BACKUP_KEY, MIGRATION_ID, MIGRATION_VERSION,
-    recoverCorrect, migrate, createBackup, exportEnvelope, exportProgress, migrateStoredProgress, restoreProgress
+    STORAGE_KEY, BACKUP_KEY, TRANSFER_FORMAT, TRANSFER_BACKUP_KEY, MIGRATION_ID, MIGRATION_VERSION,
+    recoverCorrect, migrate, createBackup, exportEnvelope, exportProgress, migrateStoredProgress, restoreProgress,
+    collectAppStorage, exportTransferEnvelope, exportTransfer, normalizeTransfer, transferSummary, prepareTransferImport, applyTransferImport
   };
 })();

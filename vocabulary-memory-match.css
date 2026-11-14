@@ -1,0 +1,21 @@
+.memory-match{width:100%;margin:10px auto 0;max-width:1040px}
+.memory-help,.memory-status{margin:8px 0 14px;text-align:center;font-weight:900;color:#c7fbf5}
+.memory-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;perspective:900px}
+.memory-card{flex:0 1 calc((100% - 48px)/4);min-width:0;min-height:214px;padding:0;border:0;border-radius:20px;background:transparent;cursor:pointer;perspective:800px}
+.memory-card-inner{position:relative;display:block;width:100%;height:100%;min-height:214px;transform-style:preserve-3d;transition:transform .35s}
+.memory-card.is-open .memory-card-inner,.memory-card.is-matched .memory-card-inner{transform:rotateY(180deg)}
+.memory-card-back,.memory-card-face{position:absolute;inset:0;display:grid;place-items:center;border:3px solid #31d8ca;border-radius:20px;backface-visibility:hidden;overflow:hidden;box-shadow:0 9px 18px rgba(2,10,31,.26)}
+.memory-card-back{padding:0;background:#ffc735}
+.memory-card-back img{display:block;width:100%;height:100%;object-fit:contain;object-position:center}
+.memory-card-face{padding:20px;transform:rotateY(180deg);color:#32125f;background:#fff7df;font:900 clamp(1.35rem,2.2vw,1.8rem)/1.16 "Nunito",sans-serif;text-align:center;white-space:normal;overflow-wrap:normal;word-break:normal;hyphens:none}
+.memory-card-face.is-long{font-size:clamp(1.2rem,1.9vw,1.6rem)}
+.memory-card-face.is-extra-long{font-size:clamp(1.08rem,1.7vw,1.45rem)}
+.memory-card.is-open .memory-card-face{border-color:#31d8ca;box-shadow:0 10px 24px rgba(2,10,31,.24)}
+.memory-card.is-matched .memory-card-face{border-color:#39cf7a;background:#f4ffe9;box-shadow:0 0 0 3px rgba(57,207,122,.18),0 0 28px rgba(87,226,139,.4),0 10px 24px rgba(2,10,31,.2)}
+.memory-card.is-wrong .memory-card-face{border-color:#ef4f64;background:#fff4e7;box-shadow:0 0 0 3px rgba(239,79,100,.16),0 10px 24px rgba(2,10,31,.2);animation:memory-shake .25s linear 2}
+.memory-card:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.memory-match.is-complete .memory-status{color:#68ffc9}
+@keyframes memory-shake{25%{transform:rotateY(180deg) translateX(-4px)}75%{transform:rotateY(180deg) translateX(4px)}}
+@media(max-width:760px){.memory-grid{gap:10px}.memory-card{flex-basis:calc((100% - 10px)/2);min-height:190px}.memory-card-inner{min-height:190px}.memory-card-face{padding:12px;font-size:clamp(1.28rem,5.8vw,1.45rem);line-height:1.12}.memory-card-face.is-long{font-size:clamp(1.02rem,4.8vw,1.2rem)}.memory-card-face.is-extra-long{font-size:clamp(.9rem,4.1vw,1.08rem)}}
+@media(max-width:340px){.memory-grid{gap:8px}.memory-card{flex-basis:calc((100% - 8px)/2);min-height:188px}.memory-card-inner{min-height:188px}.memory-card-face{padding:11px;font-size:1.2rem}.memory-card-face.is-long{font-size:1rem}.memory-card-face.is-extra-long{font-size:.86rem}}
+@media(prefers-reduced-motion:reduce){.memory-card-inner{transition:none}.memory-card.is-wrong .memory-card-face{animation:none}}

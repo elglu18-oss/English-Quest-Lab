@@ -1,0 +1,76 @@
+(() => {
+  'use strict';
+  const WIDTH=3508,HEIGHT=2480,NAME_KEY='englishQuestLab.unit1.certificate.studentName',ZIGGY='assets/characters/ziggy-happy.png',LOCALHOST_MESSAGE='To download your certificate, open English Quest Lab through localhost: run node serve-local.js, then use http://127.0.0.1:8000.';
+  const encoder=new TextEncoder();
+  let ziggyPromise=null;
+  const band=(score)=>Number(score)>=95?'ENGLISH MASTER!':Number(score)>=85?'GREAT JOB!':Number(score)>=70?'WELL DONE!':'KEEP PRACTISING!';
+  const exportSupport=(protocol=window.location?.protocol||'')=>({supported:protocol==='http:'||protocol==='https:',message:protocol==='http:'||protocol==='https:'?'':LOCALHOST_MESSAGE});
+  const ensureExportSupported=()=>{const support=exportSupport();if(!support.supported){const error=new Error(support.message);error.name='CertificateExportUnavailable';throw error;}};
+  const attemptKey=(attempt)=>`${attempt?.completedAt||''}|${Number(attempt?.score)||0}|${Number(attempt?.correct)||0}`;
+  const dateFor=(attempt)=>new Date(attempt?.completedAt||Date.now()).toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});
+  const safeName=(name)=>String(name||'Student').normalize('NFKD').replace(/\p{M}/gu,'').trim().replace(/[^\p{L}\p{N}]+/gu,'_').replace(/^_+|_+$/g,'')||'Student';
+  const filenameFor=(attempt,name,extension)=>`English_Quest_Lab_Unit1_${safeName(name)}_${Number(attempt.score)||0}_points.${extension}`;
+  const attemptOptions=(game,current)=>{
+    const labelled=[['Current result',current],['First attempt',game?.firstCompletedAttempt],['Best attempt',game?.bestCompletedAttempt],['Latest attempt',game?.lastAttempt],...(Array.isArray(game?.completedAttempts)?game.completedAttempts.map((attempt,index)=>[`Attempt ${index+1}`,attempt]):[])],seen=new Set();
+    return labelled.filter(([,attempt])=>attempt&&Number.isFinite(Number(attempt.score))&&Number.isFinite(Number(attempt.correct))).filter(([,attempt])=>{const key=attemptKey(attempt);if(seen.has(key))return false;seen.add(key);return true;}).map(([label,attempt])=>({id:attemptKey(attempt),label:`${label} · ${Number(attempt.score)} / 100 · ${Number.isFinite(Number(attempt.durationSeconds))?(window.UNIT1_FINAL_TIMER?.clock(attempt.durationSeconds)||'Not recorded'):'Not recorded'} · ${dateFor(attempt)}`,attempt}));
+  };
+  const loadZiggy=()=>{
+    if(ziggyPromise)return ziggyPromise;
+    ziggyPromise=new Promise((resolve,reject)=>{const image=new Image();image.decoding='async';if(exportSupport().supported)image.crossOrigin='anonymous';image.onload=()=>resolve(image);image.onerror=()=>reject(new Error('Ziggy could not be loaded. Please reload the page through localhost.'));image.src=new URL(ZIGGY,document.baseURI).href;});
+    return ziggyPromise;
+  };
+  const roundedRect=(context,x,y,width,height,radius,fill,stroke,lineWidth=1)=>{context.beginPath();context.roundRect(x,y,width,height,radius);if(fill){context.fillStyle=fill;context.fill();}if(stroke){context.lineWidth=lineWidth;context.strokeStyle=stroke;context.stroke();}};
+  const star=(context,x,y,outer,inner,color,rotation=-Math.PI/2)=>{context.beginPath();for(let point=0;point<10;point+=1){const radius=point%2===0?outer:inner,angle=rotation+point*Math.PI/5;const px=x+Math.cos(angle)*radius,py=y+Math.sin(angle)*radius;point?context.lineTo(px,py):context.moveTo(px,py);}context.closePath();context.fillStyle=color;context.fill();};
+  const fittedText=(context,text,x,y,maxWidth,startSize,minimum,color,font='Arial, "Arial Unicode MS", sans-serif',weight=800)=>{let size=startSize;do{context.font=`${weight} ${size}px ${font}`;if(context.measureText(text).width<=maxWidth||size<=minimum)break;size-=4;}while(size>minimum);context.fillStyle=color;context.textAlign='center';context.textBaseline='middle';context.fillText(text,x,y);return size;};
+  const drawContained=(context,image,x,y,width,height)=>{const scale=Math.min(width/image.naturalWidth,height/image.naturalHeight),drawWidth=image.naturalWidth*scale,drawHeight=image.naturalHeight*scale;context.drawImage(image,x+(width-drawWidth)/2,y+(height-drawHeight)/2,drawWidth,drawHeight);};
+  async function renderCertificate(attempt,name){
+    const image=await loadZiggy(),canvas=document.createElement('canvas');canvas.width=WIDTH;canvas.height=HEIGHT;
+    const context=canvas.getContext('2d',{alpha:false});context.imageSmoothingEnabled=true;context.imageSmoothingQuality='high';
+    const background=context.createLinearGradient(0,0,WIDTH,HEIGHT);background.addColorStop(0,'#16083f');background.addColorStop(.52,'#35116f');background.addColorStop(1,'#071e50');context.fillStyle=background;context.fillRect(0,0,WIDTH,HEIGHT);
+    const glow=context.createRadialGradient(470,430,20,470,430,1000);glow.addColorStop(0,'rgba(85,229,209,.28)');glow.addColorStop(1,'rgba(85,229,209,0)');context.fillStyle=glow;context.fillRect(0,0,1600,1600);
+    context.strokeStyle='#f8d654';context.lineWidth=34;context.strokeRect(74,74,WIDTH-148,HEIGHT-148);context.strokeStyle='#55e5d1';context.lineWidth=8;context.strokeRect(114,114,WIDTH-228,HEIGHT-228);
+    for(const item of [[220,220,22],[540,165,13],[1000,245,18],[3150,210,20],[3280,520,12],[3040,2120,18],[580,2220,15],[175,1910,12]])star(context,item[0],item[1],item[2],item[2]*.43,item[0]>2000?'#55e5d1':'#ffe15b');
+    context.save();context.shadowColor='rgba(0,0,0,.42)';context.shadowBlur=44;drawContained(context,image,135,325,1250,1850);context.restore();
+    context.fillStyle='rgba(8,13,54,.42)';context.beginPath();context.ellipse(760,2185,550,90,0,0,Math.PI*2);context.fill();
+    const left=1420,right=3290,center=(left+right)/2,max=right-left;
+    context.fillStyle='#55e5d1';context.textAlign='center';context.font='900 48px Arial, sans-serif';context.fillText('ENGLISH QUEST LAB · UNIT 1',center,300);
+    fittedText(context,'CERTIFICATE OF ACHIEVEMENT',center,475,max,112,72,'#ffe15b');
+    context.fillStyle='#d9fdf6';context.font='800 44px Arial, sans-serif';context.fillText('This certificate is proudly awarded to',center,630);
+    roundedRect(context,left+70,695,max-140,250,42,'rgba(255,250,240,.97)','#55e5d1',10);
+    fittedText(context,String(name||'YOUR NAME'),center,820,max-260,118,58,'#32125f','Arial, "Arial Unicode MS", sans-serif',800);
+    context.fillStyle='#fff';context.font='800 45px Arial, sans-serif';context.fillText('for completing the',center,1045);
+    fittedText(context,'FINAL VOCABULARY CHALLENGE',center,1165,max,78,55,'#72f5df');
+    const scoreGradient=context.createLinearGradient(left,0,right,0);scoreGradient.addColorStop(0,'#ffe15b');scoreGradient.addColorStop(1,'#ffb531');roundedRect(context,left+80,1285,max-160,230,44,scoreGradient,null);
+    context.fillStyle='#32125f';context.font='900 91px Arial, sans-serif';context.fillText(`${Number(attempt.score)} / 100 POINTS`,center,1405);
+    const statWidth=500,statGap=55,statStart=center-(statWidth*3+statGap*2)/2,time=Number.isFinite(Number(attempt.durationSeconds))?`TIME: ${window.UNIT1_FINAL_TIMER?.clock(attempt.durationSeconds)||'Not recorded'}`:'TIME: NOT RECORDED';
+    [0,1,2].forEach((index)=>roundedRect(context,statStart+index*(statWidth+statGap),1585,statWidth,145,30,'rgba(85,229,209,.11)',index===1?'#ffe15b':'#55e5d1',6));
+    fittedText(context,`${Number(attempt.correct)} / 20 CORRECT`,statStart+statWidth/2,1660,statWidth-35,42,30,'#fff','Arial, sans-serif',900);fittedText(context,time,statStart+statWidth+statGap+statWidth/2,1660,statWidth-35,42,28,'#fff','Arial, sans-serif',900);fittedText(context,dateFor(attempt).toUpperCase(),statStart+(statWidth+statGap)*2+statWidth/2,1660,statWidth-35,38,27,'#fff','Arial, sans-serif',900);
+    const award=band(attempt.score);roundedRect(context,left+130,1815,max-260,215,36,'rgba(18,8,66,.7)','#ffe15b',8);fittedText(context,award,center,1925,max-340,91,56,'#ffe15b');
+    context.save();context.translate(center,2165);context.fillStyle='#f6c744';context.beginPath();context.moveTo(-330,-70);context.lineTo(330,-70);context.lineTo(270,70);context.lineTo(-270,70);context.closePath();context.fill();context.fillStyle='#6f2eb7';context.font='900 39px Arial, sans-serif';context.fillText('VOCABULARY STAR',0,12);context.restore();
+    context.fillStyle='#c9faf2';context.font='700 32px Arial, sans-serif';context.fillText('Keep learning. Keep shining. Keep exploring English!',center,2340);
+    return canvas;
+  }
+  const canvasBlob=(canvas,type,quality)=>new Promise((resolve,reject)=>canvas.toBlob((blob)=>blob?resolve(blob):reject(new Error('Certificate file could not be created.')),type,quality));
+  const ascii=(text)=>encoder.encode(text);
+  const makePdf=(jpeg,width,height)=>{
+    const pageWidth=841.89,pageHeight=595.28,content=`q\n${pageWidth.toFixed(2)} 0 0 ${pageHeight.toFixed(2)} 0 0 cm\n/Im0 Do\nQ\n`,objects=[ascii('<< /Type /Catalog /Pages 2 0 R >>'),ascii('<< /Type /Pages /Kids [3 0 R] /Count 1 >>'),ascii(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageWidth.toFixed(2)} ${pageHeight.toFixed(2)}] /Resources << /XObject << /Im0 5 0 R >> >> /Contents 4 0 R >>`),ascii(`<< /Length ${ascii(content).length} >>\nstream\n${content}endstream`),null],parts=[ascii('%PDF-1.4\n%\xE2\xE3\xCF\xD3\n')],offsets=[0];let length=parts[0].length;
+    const append=(bytes)=>{parts.push(bytes);length+=bytes.length;};objects.forEach((body,index)=>{const id=index+1;offsets[id]=length;append(ascii(`${id} 0 obj\n`));if(id===5){append(ascii(`<< /Type /XObject /Subtype /Image /Width ${width} /Height ${height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpeg.length} >>\nstream\n`));append(jpeg);append(ascii('\nendstream'));}else append(body);append(ascii('\nendobj\n'));});const xrefOffset=length;append(ascii(`xref\n0 6\n0000000000 65535 f \n${offsets.slice(1).map((offset)=>`${String(offset).padStart(10,'0')} 00000 n \n`).join('')}trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF\n`));return new Blob(parts,{type:'application/pdf'});
+  };
+  const createPngBlob=async(attempt,name)=>{ensureExportSupported();return canvasBlob(await renderCertificate(attempt,name),'image/png');};
+  const createPdfBlob=async(attempt,name)=>{ensureExportSupported();const canvas=await renderCertificate(attempt,name),jpegBlob=await canvasBlob(canvas,'image/jpeg',.97),jpeg=new Uint8Array(await jpegBlob.arrayBuffer());return makePdf(jpeg,canvas.width,canvas.height);};
+  const download=(blob,filename)=>{const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=filename;link.hidden=true;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1800);};
+  const open=({currentAttempt,game})=>{
+    document.querySelector('[data-unit1-certificate-modal]')?.remove();
+    const options=attemptOptions(game,currentAttempt),stored=localStorage.getItem(NAME_KEY)||'',support=exportSupport(),overlay=document.createElement('div');overlay.className='ufc-overlay';overlay.dataset.unit1CertificateModal='';overlay.innerHTML=`<section class="ufc-dialog" role="dialog" aria-modal="true" aria-labelledby="ufc-title"><button class="ufc-close" type="button" data-certificate-close aria-label="Close certificate preview">×</button><header><p>English Quest Lab · Unit 1</p><h2 id="ufc-title">Your Certificate</h2><span>Enter the student's name, choose a completed attempt and download a print-ready certificate.</span></header><div class="ufc-form"><label>Student name<input data-certificate-name maxlength="60" autocomplete="name" value="${String(stored).replace(/[&<>'"]/g,(char)=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]))}"></label>${options.length>1?`<label>Completed attempt<select data-certificate-attempt>${options.map((option)=>`<option value="${option.id}">${option.label}</option>`).join('')}</select></label>`:''}</div><div class="ufc-preview"><canvas data-certificate-canvas aria-label="Certificate preview"></canvas></div><p class="ufc-status" data-certificate-status aria-live="polite"></p><div class="ufc-actions"><button type="button" data-download-png>DOWNLOAD PNG</button><button type="button" data-download-pdf>DOWNLOAD PDF</button></div></section>`;
+    document.body.appendChild(overlay);document.body.classList.add('ufc-modal-open');
+    const nameInput=overlay.querySelector('[data-certificate-name]'),select=overlay.querySelector('[data-certificate-attempt]'),preview=overlay.querySelector('[data-certificate-canvas]'),status=overlay.querySelector('[data-certificate-status]'),buttons=[...overlay.querySelectorAll('[data-download-png],[data-download-pdf]')];let current=options[0]?.attempt||currentAttempt,renderToken=0;
+    const close=()=>{overlay.remove();document.body.classList.remove('ufc-modal-open');document.removeEventListener('keydown',onKey);};const onKey=(event)=>{if(event.key==='Escape')close();};document.addEventListener('keydown',onKey);overlay.querySelector('[data-certificate-close]').onclick=close;overlay.addEventListener('click',(event)=>{if(event.target===overlay)close();});
+    const updateButtons=()=>buttons.forEach((button)=>button.disabled=!support.supported||!nameInput.value.trim());
+    const updatePreview=async()=>{const token=++renderToken;status.textContent='Preparing preview…';try{const canvas=await renderCertificate(current,nameInput.value.trim()||'YOUR NAME');if(token!==renderToken)return;preview.width=canvas.width;preview.height=canvas.height;preview.getContext('2d').drawImage(canvas,0,0);status.textContent=!support.supported?support.message:nameInput.value.trim()?'Ready to download.':'Enter the student name to enable downloads.';}catch{status.textContent=support.supported?'The certificate preview could not be created. Please reload and try again.':support.message;}};
+    let timer=null;nameInput.addEventListener('input',()=>{localStorage.setItem(NAME_KEY,nameInput.value);updateButtons();clearTimeout(timer);timer=setTimeout(updatePreview,220);});select?.addEventListener('change',()=>{current=options.find((option)=>option.id===select.value)?.attempt||current;updatePreview();});
+    const exportFile=async(type)=>{const name=nameInput.value.trim();if(!name)return;buttons.forEach((button)=>button.disabled=true);status.textContent=`Creating ${type.toUpperCase()}…`;try{const blob=type==='png'?await createPngBlob(current,name):await createPdfBlob(current,name);download(blob,filenameFor(current,name,type));status.textContent=`${type.toUpperCase()} downloaded.`;}catch(error){status.textContent=error.name==='CertificateExportUnavailable'||error.name==='SecurityError'||/tainted|origin/i.test(error.message)?LOCALHOST_MESSAGE:'The certificate could not be created. Please reload the page through localhost and try again.';}finally{updateButtons();}};
+    overlay.querySelector('[data-download-png]').onclick=()=>exportFile('png');overlay.querySelector('[data-download-pdf]').onclick=()=>exportFile('pdf');updateButtons();updatePreview();if(!support.supported)status.textContent=support.message;setTimeout(()=>nameInput.focus(),0);
+    return {close,options};
+  };
+  window.UNIT1_FINAL_CERTIFICATE={WIDTH,HEIGHT,NAME_KEY,LOCALHOST_MESSAGE,band,dateFor,filenameFor,attemptKey,attemptOptions,exportSupport,renderCertificate,createPngBlob,createPdfBlob,makePdf,open};
+})();

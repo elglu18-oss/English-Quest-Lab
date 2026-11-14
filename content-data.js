@@ -237,7 +237,75 @@ window.ENGLISH_QUEST_DATA = {
             }
           ]
         },
-        { id: 1, title: 'Coming Soon', status: 'coming-soon', activities: [] },
+        {
+          id: 1,
+          title: 'Family & Friends',
+          status: 'available',
+          wordBank: [
+            {
+              topic: 'Household chores',
+              source: 'Go Getter 3 · Unit 1',
+              words: [
+                { word: 'clear the table', translation: 'убрать со стола', image: 'assets/images/vocabulary/unit1/household-chores/clear_the_table.png' },
+                { word: 'empty the dishwasher', translation: 'разгрузить посудомоечную машину', image: 'assets/images/vocabulary/unit1/household-chores/empty_the_dishwasher.png' },
+                { word: 'feed the dog', translation: 'покормить собаку', image: 'assets/images/vocabulary/unit1/household-chores/feed_the_dog.png' },
+                { word: 'hang out the washing', translation: 'развесить бельё', image: 'assets/images/vocabulary/unit1/household-chores/hang_out_the_washing.png' },
+                { word: 'iron your T-shirt', translation: 'погладить свою футболку', image: 'assets/images/vocabulary/unit1/household-chores/iron_your_tshirt.png' },
+                { word: 'load the dishwasher', translation: 'загрузить посудомоечную машину', image: 'assets/images/vocabulary/unit1/household-chores/load_the_dishwasher.png' },
+                { word: 'load the washing machine', translation: 'загрузить стиральную машину', image: 'assets/images/vocabulary/unit1/household-chores/load_the_washing_machine.png' },
+                { word: 'make your bed', translation: 'заправить свою кровать', image: 'assets/images/vocabulary/unit1/household-chores/make_your_bed.png' },
+                { word: 'put away your clothes', translation: 'убрать свою одежду на место', image: 'assets/images/vocabulary/unit1/household-chores/put_away_your_clothes.png' },
+                { word: 'set the table', translation: 'накрыть на стол', image: 'assets/images/vocabulary/unit1/household-chores/set_the_table.png' },
+                { word: 'take out the rubbish', translation: 'вынести мусор', image: 'assets/images/vocabulary/unit1/household-chores/take_out_the_rubbish.png' },
+                { word: 'vacuum your room', translation: 'пропылесосить свою комнату', image: 'assets/images/vocabulary/unit1/household-chores/vacuum_your_room.png' },
+                { word: 'water the plants', translation: 'полить растения', image: 'assets/images/vocabulary/unit1/household-chores/water_the_plants.png' }
+              ]
+            },
+            {
+              topic: 'Personality adjectives',
+              source: 'Go Getter 3 · Unit 1',
+              words: [
+                { word: 'kind', translation: 'добрый', image: 'assets/images/vocabulary/unit1/personality-adjectives/kind.png' },
+                { word: 'friendly', translation: 'дружелюбный', image: 'assets/images/vocabulary/unit1/personality-adjectives/friendly.png' },
+                { word: 'sociable', translation: 'общительный', image: 'assets/images/vocabulary/unit1/personality-adjectives/sociable.png' },
+                { word: 'generous', translation: 'щедрый', image: 'assets/images/vocabulary/unit1/personality-adjectives/generous.png' },
+                { word: 'loyal', translation: 'преданный', image: 'assets/images/vocabulary/unit1/personality-adjectives/loyal.png' },
+                { word: 'greedy', translation: 'жадный', image: 'assets/images/vocabulary/unit1/personality-adjectives/greedy.png' },
+                { word: 'energetic', translation: 'энергичный', image: 'assets/images/vocabulary/unit1/personality-adjectives/energetic.png' },
+                { word: 'easy-going', translation: 'лёгкий в общении', image: 'assets/images/vocabulary/unit1/personality-adjectives/easy-going.png' },
+                { word: 'quiet', translation: 'тихий', image: 'assets/images/vocabulary/unit1/personality-adjectives/quiet.png' },
+                { word: 'loud', translation: 'шумный', image: 'assets/images/vocabulary/unit1/personality-adjectives/loud.png' },
+                { word: 'bossy', translation: 'любящий командовать', image: 'assets/images/vocabulary/unit1/personality-adjectives/bossy.png' },
+                { word: 'messy', translation: 'неряшливый', image: 'assets/images/vocabulary/unit1/personality-adjectives/messy.png' },
+                { word: 'patient', translation: 'терпеливый', image: 'assets/images/vocabulary/unit1/personality-adjectives/patient.png' },
+                { word: 'tidy', translation: 'аккуратный', image: 'assets/images/vocabulary/unit1/personality-adjectives/tidy.png' },
+                { word: 'organised', translation: 'организованный', image: 'assets/images/vocabulary/unit1/personality-adjectives/organised.png' }
+              ]
+            }
+          ],
+          activities: [
+            {
+              type: 'Household chores', title: 'Home Helper', topicId: 'household-chores', wordBankTopic: 'Household chores',
+              status: 'available', href: 'vocabulary-mission.html?unit=1&topic=household-chores', gameKey: 'unit1HouseholdChoresVocabulary',
+              cover: 'assets/images/vocabulary/unit1/covers/household-chores-cover.png', wordCount: 13,
+              stages: ['Meet the Words', 'Spelling Attack', 'Memory Match', 'Choose the Right Word!']
+            },
+            {
+              type: 'Personality adjectives', title: 'Personality Power', topicId: 'personality-adjectives', wordBankTopic: 'Personality adjectives',
+              status: 'available', href: 'vocabulary-mission.html?unit=1&topic=personality-adjectives', gameKey: 'unit1PersonalityAdjectivesVocabulary',
+              cover: 'assets/images/vocabulary/unit1/covers/personality-adjectives-cover.png', wordCount: 15,
+              stages: ['Meet the Words', 'Spelling Attack', 'Memory Match', 'Choose the Right Word!']
+            },
+            {
+              type: 'Unit 1 Final Test', title: 'FINAL VOCABULARY CHALLENGE!', topicId: 'final-vocabulary-challenge',
+              status: 'available', href: 'unit1-final-vocabulary.html', gameKey: 'unit1FinalVocabularyChallenge',
+              cover: 'assets/characters/ziggy-happy.png', itemCount: '20 questions · 100 points',
+              description: 'Two topics. One big challenge!', stages: ['Choose × 10', 'Type × 10'],
+              requiresGames: ['unit1HouseholdChoresVocabulary', 'unit1PersonalityAdjectivesVocabulary'],
+              requiredStages: ['Meet the Words', 'Spelling Attack', 'Memory Match', 'Choose the Right Word!']
+            }
+          ]
+        },
         { id: 2, title: 'Coming Soon', status: 'coming-soon', activities: [] }
       ]
     },

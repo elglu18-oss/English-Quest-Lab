@@ -10,7 +10,9 @@
     school: 'school',
     'food-and-drink': 'food',
     food: 'food',
-    containers: 'containers'
+    containers: 'containers',
+    'household-chores': 'household-chores',
+    'personality-adjectives': 'personality-adjectives'
   };
 
   const slug = (value) => String(value)

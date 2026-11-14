@@ -11,6 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="navigation.css">
+  <link rel="stylesheet" href="progress-transfer.css">
 </head>
 <body class="home-page">
   <main class="home-shell">
@@ -46,15 +47,13 @@
       </div>
       <a class="final-quest-action" data-final-action href="final-quest.html">Open Final Quest <span aria-hidden="true">→</span></a>
     </section>
-    <section class="progress-data-tools" aria-labelledby="progress-data-title">
-      <div><h2 id="progress-data-title">Progress backup</h2><p>Export a JSON backup before migrating or restoring saved progress.</p><small data-progress-data-status aria-live="polite"></small></div>
-      <div class="progress-data-actions"><button type="button" data-nav-plain data-progress-export>Export JSON</button><button type="button" data-nav-plain data-progress-migrate>Back up &amp; migrate</button><label>Restore JSON<input type="file" accept="application/json,.json" data-progress-import></label></div>
-    </section>
+    <section class="progress-data-tools" data-progress-transfer aria-label="Move saved progress"></section>
   </main>
   <script src="music-control.js"></script>
   <script src="navigation.js"></script>
   <script src="progress-data.js"></script>
   <script src="unit0-readiness.js"></script>
   <script src="home-readiness.js"></script>
+  <script src="progress-transfer.js"></script>
 </body>
 </html>

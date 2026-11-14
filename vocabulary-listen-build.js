@@ -8,9 +8,13 @@
     '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
   }[character]));
 
+  const isFixedCharacter = (character) => character === '-';
+
   const createModel = (answer) => {
     const words = String(answer).trim().split(/\s+/).map((word) => Array.from(word));
-    const letters = words.flat().map((letter, index) => ({ id: `letter-${index}`, letter }));
+    const letters = words.flatMap((word, wordIndex) => word.flatMap((letter, characterIndex) => (
+      isFixedCharacter(letter) ? [] : [{ id: `letter-${wordIndex}-${characterIndex}`, letter }]
+    )));
     return { words, letters, answer: words.map((word) => word.join('')).join(' ') };
   };
 
@@ -82,7 +86,8 @@
 
     const draw = () => {
       let selectedIndex = 0;
-      lane.innerHTML = model.words.map((word, wordIndex) => `<span class="build-word" aria-label="Word ${wordIndex + 1}">${word.map(() => {
+      lane.innerHTML = model.words.map((word, wordIndex) => `<span class="build-word" aria-label="Word ${wordIndex + 1}">${word.map((character) => {
+        if (isFixedCharacter(character)) return `<span class="build-slot is-filled is-fixed" aria-label="Hyphen">${escapeHtml(character)}</span>`;
         const item = selected[selectedIndex++];
         return `<span class="build-slot${item ? ' is-filled' : ''}">${item ? escapeHtml(item.letter) : ''}</span>`;
       }).join('')}</span>`).join('');
@@ -154,7 +159,9 @@
     };
     const value = () => {
       let cursor = 0;
-      return model.words.map((word) => word.map(() => selected[cursor++]?.letter || '').join('')).join(' ');
+      return model.words.map((word) => word.map((character) => (
+        isFixedCharacter(character) ? character : selected[cursor++]?.letter || ''
+      )).join('')).join(' ');
     };
     const destroy = () => {
       if (destroyed) return;
