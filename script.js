@@ -15,6 +15,7 @@
       return { games: {} };
     }
   };
+  const mobileUnitOneImage = (source, unitId) => unitId === 1 && /assets\/images\/vocabulary\/unit1\//.test(source || '') ? `${source}${source.includes('?')?'&':'?'}v=u1-mobile-20261114-2` : source;
 
   const renderMissionGrid = (unit) => {
     const games = loadProgress().games || {};
@@ -61,18 +62,18 @@
           ? (isAvailable ? (isCompleted ? 'PLAY FINAL AGAIN →' : 'START FINAL CHALLENGE →') : isRequirementLocked ? 'FINISH 8 STAGES TO UNLOCK' : 'IN DEVELOPMENT')
           : (isAvailable ? (isCompleted ? 'PLAY AGAIN →' : 'PLAY →') : isRequirementLocked ? 'Finish 8 stages to unlock' : 'In development');
         const body = isFinalVocabulary ? `
-          <span class="mission-character final-vocabulary-ziggy"><img src="${activity.cover || 'assets/characters/ziggy-happy.png'}" alt="Ziggy ready for the Unit 1 Final Vocabulary Challenge"></span>
+          <span class="mission-character final-vocabulary-ziggy"><img src="${mobileUnitOneImage(activity.cover || 'assets/characters/ziggy-happy.png',unit.id)}" alt="Ziggy ready for the Unit 1 Final Vocabulary Challenge"></span>
           <span class="final-vocabulary-content">
             <span class="final-vocabulary-kicker">UNIT 1 · FINAL MISSION</span>
             <strong class="mission-title">${activity.title}</strong>
             <span class="mission-description">${activity.description}</span>
             <span class="mission-word-count">20 QUESTIONS · 100 POINTS</span>
             <span class="final-vocabulary-badges" aria-label="Challenge sections"><span>CHOOSE × 10</span><span>TYPE × 10</span></span>
-            ${isRequirementLocked ? '<span class="final-vocabulary-lock-message">Complete all 4 stages in Home Helper and all 4 stages in Personality Power to unlock the final challenge.</span>' : ''}
+            ${isRequirementLocked ? '<span class="final-vocabulary-lock-message">🔒 Complete both vocabulary missions to unlock the Final Challenge!</span>' : ''}
             <span class="mission-card-footer">${bestScore}<span class="mission-action">${isRequirementLocked ? 'LOCKED' : isCompleted ? 'PLAY FINAL AGAIN →' : 'START CHALLENGE! →'}</span></span>
           </span>` : `
           <span class="mission-card-top"><span class="mission-number">Mission ${String(index + 1).padStart(2, '0')}</span><span class="mission-status ${statusClass}">${statusText}</span></span>
-          <span class="mission-character"><img src="${activity.cover || activity.character || 'assets/characters/ziggy-happy.png'}" alt="${activity.type} illustration"></span>
+          <span class="mission-character"><img src="${mobileUnitOneImage(activity.cover || activity.character || 'assets/characters/ziggy-happy.png',unit.id)}" alt="${activity.type} illustration"></span>
           <span class="mission-topic">${activity.type}</span>
           <strong class="mission-title">${activity.title}</strong>
           <span class="mission-word-count">${activity.itemCount || `${activity.wordCount || 0} words`}</span>

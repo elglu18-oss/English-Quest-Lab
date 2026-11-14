@@ -2,7 +2,7 @@
   'use strict';
 
   const CLOSE_DELAY_MS = 1000;
-  const CARD_BACK_IMAGE = 'assets/images/vocabulary/unit1/memory-match/memory-card-back.png';
+  const CARD_BACK_IMAGE = 'assets/images/vocabulary/unit1/memory-match/memory-card-back.png?v=u1-mobile-20261114-2';
   const lastDeckOrders = new Map();
   let activeGame = null;
 
