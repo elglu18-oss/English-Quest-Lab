@@ -39,7 +39,9 @@
         <span class="unit-state">${unit.activities.length} missions</span>
       </div>
       <div class="mission-grid">${unit.activities.map((activity, index) => {
-        const requirementsMet = !Array.isArray(activity.requiresGames) || activity.requiresGames.every((gameKey) => {
+        const isFinalVocabulary = activity.gameKey === 'unit1FinalVocabularyChallenge';
+        const finalProgress = isFinalVocabulary ? window.UNIT1_FINAL_VOCABULARY.stageProgress({ games }) : null;
+        const requirementsMet = finalProgress ? finalProgress.unlocked : !Array.isArray(activity.requiresGames) || activity.requiresGames.every((gameKey) => {
           const stages = new Set(Array.isArray(games[gameKey]?.stageProgress) ? games[gameKey].stageProgress : []);
           return (activity.requiredStages || []).every((stage) => stages.has(stage));
         });
@@ -57,10 +59,7 @@
         const completedStages = new Set(Array.isArray(savedGame?.stageProgress) ? savedGame.stageProgress : (isCompleted ? stages : []));
         const stageCount = completedStages.size;
         const totalStages = stages.length;
-        const isFinalVocabulary = activity.gameKey === 'unit1FinalVocabularyChallenge';
-        const actionText = isFinalVocabulary
-          ? (isAvailable ? (isCompleted ? 'PLAY FINAL AGAIN →' : 'START FINAL CHALLENGE →') : isRequirementLocked ? 'FINISH 8 STAGES TO UNLOCK' : 'IN DEVELOPMENT')
-          : (isAvailable ? (isCompleted ? 'PLAY AGAIN →' : 'PLAY →') : isRequirementLocked ? 'Finish 8 stages to unlock' : 'In development');
+        const actionText = isAvailable ? (isCompleted ? 'PLAY AGAIN →' : 'PLAY →') : isRequirementLocked ? 'Finish 8 stages to unlock' : 'In development';
         const body = isFinalVocabulary ? `
           <span class="mission-character final-vocabulary-ziggy"><img src="${mobileUnitOneImage(activity.cover || 'assets/characters/ziggy-happy.png',unit.id)}" alt="Ziggy ready for the Unit 1 Final Vocabulary Challenge"></span>
           <span class="final-vocabulary-content">
@@ -69,7 +68,7 @@
             <span class="mission-description">${activity.description}</span>
             <span class="mission-word-count">20 QUESTIONS · 100 POINTS</span>
             <span class="final-vocabulary-badges" aria-label="Challenge sections"><span>CHOOSE × 10</span><span>TYPE × 10</span></span>
-            ${isRequirementLocked ? '<span class="final-vocabulary-lock-message">🔒 Complete both vocabulary missions to unlock the Final Challenge!</span>' : ''}
+            <span class="${isRequirementLocked ? 'final-vocabulary-lock-message' : 'mission-progress-count'}">${finalProgress.completedStages}/${finalProgress.totalStages} — Final Challenge ${finalProgress.unlocked ? 'Unlocked' : 'Locked'}</span>
             <span class="mission-card-footer">${bestScore}<span class="mission-action">${isRequirementLocked ? 'LOCKED' : isCompleted ? 'PLAY FINAL AGAIN →' : 'START CHALLENGE! →'}</span></span>
           </span>` : `
           <span class="mission-card-top"><span class="mission-number">Mission ${String(index + 1).padStart(2, '0')}</span><span class="mission-status ${statusClass}">${statusText}</span></span>
@@ -139,7 +138,7 @@
       const heroCopy = document.querySelector('[data-vocabulary-hero-copy]');
       const ziggyCopy = document.querySelector('[data-vocabulary-ziggy-copy]');
       if (heroCopy) heroCopy.textContent = unitId === 1
-        ? 'Complete four stages in both topics, then take the 100-point Final Vocabulary Challenge.'
+        ? 'Complete at least 7 of 8 stages to unlock the 100-point Final Vocabulary Challenge.'
         : 'Explore each topic through four stages: learn the words, master their spelling, use them and recall them.';
       if (ziggyCopy) ziggyCopy.textContent = unitId === 1
         ? 'Learn it, master it, then take the final challenge!'

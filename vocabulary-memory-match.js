@@ -61,12 +61,14 @@
     let destroyed = false;
     let resizeFrame = null;
 
+    const pointsLabel = () => `${matched.size} / ${entries.length} pairs · ${matched.size} pts`;
+
     host.innerHTML = `<div class="memory-match" data-memory-match>
       <p class="memory-help">Open an English card and its Russian translation.</p>
       <div class="memory-grid" data-memory-grid>${deck.map((card) => `<button class="memory-card" type="button" data-card-id="${card.id}" aria-label="Hidden memory card">
         <span class="memory-card-inner"><span class="memory-card-back" aria-hidden="true"><img src="${CARD_BACK_IMAGE}" alt="" width="1672" height="941"></span><span class="memory-card-face${card.label.length >= 28 ? ' is-extra-long' : card.label.length >= 20 ? ' is-long' : ''}" lang="${card.language}">${escapeHtml(card.label)}</span></span>
       </button>`).join('')}</div>
-      <p class="memory-status" data-memory-status role="status" aria-live="polite">0 of ${entries.length} pairs</p>
+      <p class="memory-status" data-memory-status role="status" aria-live="polite">${pointsLabel()}</p>
     </div>`;
 
     const root = host.querySelector('[data-memory-match]');
@@ -111,12 +113,12 @@
         [firstButton, secondButton].forEach((button) => { button?.classList.add('is-matched'); if (button) button.disabled = true; });
         opened.length = 0;
         locked = false;
-        status.textContent = `${matched.size} of ${entries.length} pairs`;
+        status.textContent = pointsLabel();
         options.sound?.('correct');
         options.onMatch?.(first.entry, !mistakes.has(first.pairId));
         if (matched.size === entries.length) {
           root.classList.add('is-complete');
-          status.textContent = `Round complete: ${entries.length} of ${entries.length} pairs`;
+          status.textContent = `Round complete · ${pointsLabel()}`;
           options.onComplete?.();
         }
         return;
@@ -124,14 +126,14 @@
 
       mistakes.add(first.pairId); mistakes.add(second.pairId);
       [cardButton(first.id), cardButton(second.id)].forEach((button) => button?.classList.add('is-wrong'));
-      status.textContent = 'Not a pair — the cards will close.';
+      status.textContent = `Not a pair. ${pointsLabel()}`;
       options.sound?.('incorrect');
       options.onMismatch?.([first.entry, second.entry]);
       timer = window.setTimeout(() => {
         [first, second].forEach((item) => { const button = cardButton(item.id); button?.classList.remove('is-wrong'); setOpen(item, false); });
         opened.length = 0;
         locked = false;
-        status.textContent = `${matched.size} of ${entries.length} pairs`;
+        status.textContent = pointsLabel();
         timer = null;
       }, CLOSE_DELAY_MS);
     };

@@ -20,7 +20,7 @@
   if (isMemoryMission) document.body.classList.add(`vocabulary-topic-${topicId}`);
   const firstTryReward = RULES.learningMissions.sparksPerFirstTryAnswer;
   const perfectReward = words.length * RULES.recallMission.perfectRecallRewardPerWord;
-  const maxScore = isMemoryMission ? (words.length * 2 + chooseTasks.length) * firstTryReward : words.length * firstTryReward * 2 + perfectReward;
+  const maxScore = isMemoryMission ? (words.length + chooseTasks.length) * firstTryReward + words.length : words.length * firstTryReward * 2 + perfectReward;
   const $ = (selector) => document.querySelector(selector);
   const el = {
     intro:$('[data-intro]'),game:$('[data-game]'),result:$('[data-result]'),start:$('[data-start]'),replay:$('[data-replay]'),stageLauncher:$('[data-stage-launcher]'),stageMenu:$('[data-stage-menu]'),sparks:$('[data-sparks]'),best:$('[data-best]'),strip:$('[data-mission-strip]'),progress:$('[data-progress]'),track:$('.progress-track'),missionLabel:$('[data-mission-label]'),taskLabel:$('[data-task-label]'),missionName:$('[data-mission-name]'),instruction:$('[data-instruction]'),taskArea:$('[data-task-area]'),feedback:$('[data-feedback]'),previous:$('[data-previous]'),check:$('[data-check]'),next:$('[data-next]'),ziggy:$('[data-ziggy]'),ziggyMessage:$('[data-ziggy-message]'),hardCount:$('[data-hard-count]'),finalScore:$('[data-final-score]'),finalMax:$('[data-final-max]'),perfect:$('[data-perfect-recall]'),attempts:$('[data-recall-attempts]'),saved:$('[data-saved]'),resultMessage:$('[data-result-message]'),resultTitle:$('[data-result-title]'),perfectLine:$('[data-perfect-line]'),attemptsLine:$('[data-attempts-line]')
@@ -199,16 +199,25 @@
       pronounce:(entry)=>window.VOCABULARY_AUDIO.play(entry.word,audioUrl(entry)),
       onMatch:(entry,firstTry)=>{
         state.memoryMatched+=1;
-        if(firstTry){state.score+=firstTryReward;state.firstCorrect+=1;el.sparks.textContent=String(state.score);}
+        if(firstTry)state.firstCorrect+=1;
+        if(!state.practiceReplay){
+          state.score+=1;
+          el.sparks.textContent=String(state.score);
+        }
         updateProgress();
       },
       onMismatch:(entries)=>{entries.forEach((entry)=>rememberDifficult(entry.word));setZiggy('thinking','Not a pair. Watch the cards and try again.');},
       onComplete:()=>{
         state.answered=true;
         sound('complete',`vocabulary:${activity.gameKey}:memory-round:${state.memoryRoundIndex}`);
-        setZiggy('happy',state.memoryRoundIndex===state.memoryRounds.length-1?'You matched every word!':'Round complete! Ready for the next one?');
-        showFeedback(true,'Round complete!',`${round.length} pairs matched.`);
-        el.next.hidden=false;el.next.disabled=false;el.next.textContent=state.memoryRoundIndex===state.memoryRounds.length-1?'See Results':'Next Round';el.next.onclick=advance;
+        const lastRound=state.memoryRoundIndex===state.memoryRounds.length-1;
+        if(lastRound&&!state.practiceReplay){
+          saveStage(STAGES[2]);
+          saveUnitOneDraft(3);
+        }
+        setZiggy('happy',lastRound?'You matched every word!':'Round complete! Ready for the next one?');
+        showFeedback(true,'Round complete!',`${state.memoryMatched} / ${words.length} pairs · ${state.memoryMatched} pts`);
+        el.next.hidden=false;el.next.disabled=false;el.next.textContent=lastRound?'See Results':'Next Round';el.next.onclick=advance;
       }
     });
   };

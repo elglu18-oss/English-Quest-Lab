@@ -39,7 +39,16 @@
     return {score:chooseScore+typeScore,correct:correct.length,chooseScore,typeScore,errors:TASKS.length-correct.length};
   };
   const band = (score) => score>=95?'ENGLISH MASTER!':score>=85?'GREAT JOB!':score>=70?'WELL DONE!':'KEEP PRACTISING!';
-  const isUnlocked = (progress) => REQUIREMENTS.every((key)=>{const completed=new Set(progress?.games?.[key]?.stageProgress||[]);return STAGES.every((stage)=>completed.has(stage));});
+  const totalStages = REQUIREMENTS.length * STAGES.length;
+  const minimumStages = Math.ceil(totalStages * 0.8);
+  const stageProgress = (progress) => {
+    const completedStages = REQUIREMENTS.reduce((count, key) => {
+      const saved = progress?.games?.[key]?.stageProgress;
+      const stages = new Set(Array.isArray(saved) ? saved : []);
+      return count + STAGES.filter((stage) => stages.has(stage)).length;
+    }, 0);
+    return { completedStages, totalStages, minimumStages, unlocked: completedStages >= minimumStages };
+  };
   const mistakes = (answers) => (Array.isArray(answers)?answers:[]).filter((answer)=>!answer.correct);
   const attemptKey = (attempt) => `${attempt?.completedAt||''}|${Number(attempt?.score)||0}|${Number(attempt?.correct)||0}`;
   const mergeResult = (oldGame, attempt) => {
@@ -48,5 +57,5 @@
     const bestCompletedAttempt=completedAttempts.reduce((best,item)=>!best||Number(item.score)>Number(best.score)?item:best,null);
     return {...old,completed:true,firstCompletedAttempt:old.firstCompletedAttempt||attempt,bestCompletedAttempt,completedAttempts,bestScore:Math.max(Number(old.bestScore)||0,attempt.score),bestCorrect:Math.max(Number(old.bestCorrect)||0,attempt.correct),lastAttempt:attempt,plays:(Number(old.plays)||0)+1,completedAt:attempt.completedAt};
   };
-  window.UNIT1_FINAL_VOCABULARY = { TASKS, STAGES, REQUIREMENTS, shuffle, createPlan, compactPlan, restorePlan, normalize, isCorrect, grade, band, isUnlocked, mistakes, mergeResult };
+  window.UNIT1_FINAL_VOCABULARY = { TASKS, STAGES, REQUIREMENTS, shuffle, createPlan, compactPlan, restorePlan, normalize, isCorrect, grade, band, stageProgress, mistakes, mergeResult };
 })();
