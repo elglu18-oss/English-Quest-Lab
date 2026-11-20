@@ -33,6 +33,16 @@
   const saveProgress = (progress) => localStorage.setItem(STORAGE_KEY,JSON.stringify(progress));
   const booster = window.ENGLISH_QUEST_MISTAKE_BOOSTER.create(`vocabulary:${activity.gameKey}`, { singular: 'word', unit: 'words' });
   const sound = (name,token) => window.ENGLISH_QUEST_MUSIC?.playEffect(name,token);
+  const spellingMistake = (entry, letter) => {
+    learningMistake(entry,`“${letter}” is the wrong letter here. Try a different one.`);
+    if (state.practiceReplay || state.spellingMistakes.has(entry.word)) return;
+    state.spellingMistakes.add(entry.word);
+    const progress = loadProgress();
+    const old = progress.games[activity.gameKey] || {};
+    const priorMistakes = Array.isArray(old.spellingMistakes) ? old.spellingMistakes : [];
+    progress.games[activity.gameKey] = { ...old, spellingMistakes: [...new Set([...priorMistakes, entry.word])] };
+    saveProgress(progress);
+  };
   const savedGame = () => loadProgress().games[activity.gameKey] || {};
   const unitOneAccess = (game=savedGame()) => {
     const completed=new Set(Array.isArray(game.stageProgress)?game.stageProgress:[]);
@@ -59,7 +69,23 @@
   const setZiggy = (kind,message) => { const sources={thinking:'assets/characters/ziggy-tricky.png',correct:'assets/characters/ziggy-surprised.png',happy:'assets/characters/ziggy-happy.png'};el.ziggy.src=sources[kind];el.ziggyMessage.textContent=message; };
   const showFeedback = (correct,title,message) => { el.feedback.hidden=false;el.feedback.className=`feedback ${correct?'correct':'wrong'}`;el.feedback.innerHTML=`<strong>${escapeHtml(title)}</strong><p>${escapeHtml(message)}</p>`; };
   const resetActions = () => { el.feedback.hidden=true;el.previous.hidden=true;el.check.hidden=true;el.next.hidden=false;el.next.disabled=true;el.check.onclick=null;el.next.onclick=null;el.previous.onclick=null;$('.mission-card').classList.remove('is-correct','mistake-booster-review','memory-match-stage','stage-completion'); };
-  const learningComplete = (message) => { if(state.answered)return;state.answered=true;state.spellingError=false;if(state.firstAttempt){state.score+=firstTryReward;state.firstCorrect+=1;el.sparks.textContent=String(state.score);}sound('correct',`vocabulary:${activity.gameKey}:${state.stage}:${state.index}:correct`);setZiggy(state.firstAttempt?'correct':'happy',state.firstAttempt?'First try!':'Nice correction!');showFeedback(true,state.firstAttempt?`+${firstTryReward} Brain Sparks!`:'Correct!',message);el.check.hidden=true;el.next.disabled=false;if(isMemoryMission&&state.stage===1&&state.index===words.length-1)el.next.textContent='Finish Spelling Attack';$('.mission-card').classList.add('is-correct'); };
+  const learningComplete = (message) => {
+    if(state.answered)return;
+    state.answered=true;
+    state.spellingError=false;
+    const canEarnSpellingBonus=!isMemoryMission||(!state.practiceReplay&&!unitOneAccess().completed.has(STAGES[1]));
+    const earnBonus=state.firstAttempt&&canEarnSpellingBonus;
+    if(state.firstAttempt)state.firstCorrect+=1;
+    if(earnBonus){state.score+=firstTryReward;el.sparks.textContent=String(state.score);}
+    sound('correct',`vocabulary:${activity.gameKey}:${state.stage}:${state.index}:correct`);
+    const reaction=earnBonus?'First try!':state.firstAttempt?'Correct spelling!':'Nice correction!';
+    setZiggy(state.firstAttempt?'correct':'happy',reaction);
+    showFeedback(true,earnBonus?`+${firstTryReward} Brain Sparks!`:'Correct!',message);
+    el.check.hidden=true;
+    el.next.disabled=false;
+    if(isMemoryMission&&state.stage===1&&state.index===words.length-1)el.next.textContent='Finish Spelling Attack';
+    $('.mission-card').classList.add('is-correct');
+  };
   const learningMistake = (entry,message) => { const firstMistake=!state.mistakeThisTask;state.firstAttempt=false;state.mistakeThisTask=true;state.spellingError=state.stage===1;rememberDifficult(entry.word);if(firstMistake)booster.recordMistake({id:`${state.stage}:${entry.word}`,hint:message,rule:message,payload:{entry,sourceStage:state.stage}});sound('incorrect',`vocabulary:${activity.gameKey}:${state.stage}:${entry.word}:${message}`);setZiggy('thinking','Try again. Your progress is safe.');showFeedback(false,'Try again',message); };
   const topicPrompt = { 'places-in-town':'Which place is shown in the picture?',jobs:'Which job is shown in the picture?','places-in-school':'Which place in the school is shown?','food-and-drink':'Which food or drink is shown in the picture?' }[topicId];
   const FOOD_USE_CONTENT = {
@@ -169,9 +195,11 @@
     state.answered=true;el.instruction.textContent='Study the picture, read the word and listen.';
     const imageMarkup=picture(entry,entry.word);
     el.taskArea.innerHTML=isMemoryMission
-      ? `<button class="vocabulary-picture-audio" type="button" aria-label="Play pronunciation for ${escapeHtml(entry.word)}">${imageMarkup}</button><p class="word-label">${escapeHtml(entry.word)}</p><p class="word-translation" lang="ru">${escapeHtml(entry.translation)}</p><div class="listen-row"><button class="play-word" type="button">Play pronunciation</button></div>`
+      ? `<button class="vocabulary-picture-audio" type="button" aria-label="Play pronunciation for ${escapeHtml(entry.word)}">${imageMarkup}</button><p class="word-label">${escapeHtml(entry.word)}</p><p class="word-translation" lang="ru">${escapeHtml(entry.translation)}</p><div class="listen-row"><button class="play-word" type="button">Play pronunciation</button><p data-recording-status role="status" hidden></p></div>`
       : `${imageMarkup}<p class="word-label">${escapeHtml(entry.word)}</p><div class="listen-row"><button class="play-word" type="button">Play pronunciation</button></div>`;
-    const play=()=>window.VOCABULARY_AUDIO.play(entry.word,audioUrl(entry));
+    const play=()=>isMemoryMission
+      ? window.VOCABULARY_AUDIO.playRecordingFrom(audioUrl(entry),el.taskArea.querySelector('[data-recording-status]'))
+      : window.VOCABULARY_AUDIO.play(entry.word,audioUrl(entry));
     el.taskArea.querySelector('.vocabulary-picture-audio')?.addEventListener('click',play);el.taskArea.querySelector('.play-word').onclick=play;el.previous.hidden=state.index===0;el.previous.onclick=()=>{state.index-=1;render();};el.next.disabled=false;el.next.textContent=isMemoryMission&&state.index===words.length-1?'Finish Dictionary':state.index===words.length-1?'Start Spelling Attack':'Next';el.next.onclick=advance;
   };
   const renderSpelling = (entry) => {
@@ -180,9 +208,36 @@
     el.taskArea.innerHTML=`${picture(entry)}<p class="prompt">Tap each letter in the correct order.</p><div data-listen-build-host></div>`;
     el.check.hidden=false;el.check.disabled=true;
     const source=audioUrl(entry);
+    const host=el.taskArea.querySelector('[data-listen-build-host]');
+    if(isMemoryMission){
+      el.feedback.setAttribute('role','status');
+      if(!state.practiceReplay&&state.spellingMistakes.has(entry.word)){
+        state.firstAttempt=false;
+        state.mistakeThisTask=true;
+      }
+      const builder=listenBuild.mount(host,entry.word,{
+        audioUrl:source,
+        recordedOnly:true,
+        onWrongLetter:(letter)=>spellingMistake(entry,letter),
+        onChange:(complete)=>{
+          el.check.disabled=!complete;
+          if(state.spellingError){
+            state.spellingError=false;
+            el.feedback.hidden=true;
+            setZiggy('thinking','Keep building the word.');
+          }
+        }
+      });
+      el.check.onclick=()=>{
+        if(state.answered||!builder.isComplete()||builder.value().toLowerCase()!==builder.model.answer.toLowerCase())return;
+        builder.reveal();
+        learningComplete(`Correct spelling: ${entry.word}.`);
+      };
+      return;
+    }
     let builder;
     let spellingLocked=false;
-    builder=listenBuild.mount(el.taskArea.querySelector('[data-listen-build-host]'),entry.word,{audioUrl:source,onChange:(complete)=>{el.check.disabled=spellingLocked||!complete;if(state.spellingError&&!spellingLocked){state.spellingError=false;el.feedback.hidden=true;el.feedback.className='feedback';setZiggy('thinking','Now build the word again from memory.');}},onLockChange:(locked)=>{spellingLocked=locked;el.check.disabled=locked||!builder.isComplete();}});
+    builder=listenBuild.mount(host,entry.word,{audioUrl:source,onChange:(complete)=>{el.check.disabled=spellingLocked||!complete;if(state.spellingError&&!spellingLocked){state.spellingError=false;el.feedback.hidden=true;el.feedback.className='feedback';setZiggy('thinking','Now build the word again from memory.');}},onLockChange:(locked)=>{spellingLocked=locked;el.check.disabled=locked||!builder.isComplete();}});
     window.VOCABULARY_AUDIO.schedule(entry.word,source);
     const check=()=>{if(builder.isLocked())return;if(normalize(builder.value())===normalize(entry.word)){builder.reveal();learningComplete(`Correct spelling: ${entry.word}.`);}else{learningMistake(entry,'Not quite! Look and remember.');builder.startMemoryRetry();}};
     el.check.onclick=check;
@@ -196,7 +251,7 @@
     setZiggy('thinking',`Round ${state.memoryRoundIndex+1}: match ${round.length} pairs.`);
     window.VOCABULARY_MEMORY_MATCH.mount(el.taskArea.querySelector('[data-memory-host]'),round,{
       sound:(name)=>sound(name,`vocabulary:${activity.gameKey}:memory:${state.memoryRoundIndex}:${name}:${state.memoryMatched}`),
-      pronounce:(entry)=>window.VOCABULARY_AUDIO.play(entry.word,audioUrl(entry)),
+      pronounce:(entry)=>window.VOCABULARY_AUDIO.playRecording(audioUrl(entry)),
       onMatch:(entry,firstTry)=>{
         state.memoryMatched+=1;
         if(firstTry)state.firstCorrect+=1;
@@ -295,7 +350,7 @@
     const useOrder=isMemoryMission?[]:prepareUseOrder(forceNewOrder);const restoredPlan=startStage===3&&draft?chooseEngine.restorePlan(draft.choicePlan,chooseTasks):null;const choicePlan=isMemoryMission?(restoredPlan||prepareChoicePlan()):[];
     const startingScore=Number(draft?.score)||(isMemoryMission&&startStage===3?Number(old.bestScore)||0:0);const effectivePractice=practiceReplay||Boolean(draft?.choicePracticeReplay);
     const restoredIndex=Math.min(Math.max(0,Number(draft?.choiceMainIndex)||0),choicePlan.length);const restoredReview=choiceTaskById(draft?.choiceReviewId)?draft.choiceReviewId:null;
-    state={stage:startStage,index:startStage===3&&draft?restoredIndex:0,score:startingScore,firstCorrect:Number(draft?.firstCorrect)||0,answered:false,firstAttempt:true,mistakeThisTask:false,spellingError:false,reviewItem:null,difficult:new Set(old.difficultWords||[]),useTasks:isMemoryMission?[]:buildUseTasks(useOrder),choicePlan,choiceQueue:Array.isArray(draft?.choiceQueue)?draft.choiceQueue.map((item)=>({...item})):[],choiceReviewId:restoredReview,choiceReviewOptions:restoredReview&&Array.isArray(draft?.choiceReviewOptions)?[...draft.choiceReviewOptions]:null,choicePendingReviewId:choiceTaskById(draft?.choicePendingReviewId)?draft.choicePendingReviewId:null,choicePause:Boolean(draft?.choicePause),choiceCurrentFailed:Boolean(draft?.choiceCurrentFailed),choiceAnswered:Boolean(draft?.choiceAnswered),choiceFirstCorrect:Number(draft?.choiceFirstCorrect)||0,choiceCorrectedIds:new Set(Array.isArray(draft?.choiceCorrectedIds)?draft.choiceCorrectedIds:[]),recallOrder:null,recallAttempts:0,recallCorrect:0,perfectAwarded:false,memoryRounds:isMemoryMission?window.VOCABULARY_MEMORY_MATCH.createRounds(words):[],memoryRoundIndex:0,memoryMatched:0,stageInterstitial:null,practiceReplay:effectivePractice,runStartStage:startStage};
+    state={stage:startStage,index:startStage===3&&draft?restoredIndex:0,score:startingScore,firstCorrect:Number(draft?.firstCorrect)||0,answered:false,firstAttempt:true,mistakeThisTask:false,spellingError:false,reviewItem:null,difficult:new Set(old.difficultWords||[]),spellingMistakes:new Set(Array.isArray(old.spellingMistakes)?old.spellingMistakes:[]),useTasks:isMemoryMission?[]:buildUseTasks(useOrder),choicePlan,choiceQueue:Array.isArray(draft?.choiceQueue)?draft.choiceQueue.map((item)=>({...item})):[],choiceReviewId:restoredReview,choiceReviewOptions:restoredReview&&Array.isArray(draft?.choiceReviewOptions)?[...draft.choiceReviewOptions]:null,choicePendingReviewId:choiceTaskById(draft?.choicePendingReviewId)?draft.choicePendingReviewId:null,choicePause:Boolean(draft?.choicePause),choiceCurrentFailed:Boolean(draft?.choiceCurrentFailed),choiceAnswered:Boolean(draft?.choiceAnswered),choiceFirstCorrect:Number(draft?.choiceFirstCorrect)||0,choiceCorrectedIds:new Set(Array.isArray(draft?.choiceCorrectedIds)?draft.choiceCorrectedIds:[]),recallOrder:null,recallAttempts:0,recallCorrect:0,perfectAwarded:false,memoryRounds:isMemoryMission?window.VOCABULARY_MEMORY_MATCH.createRounds(words):[],memoryRoundIndex:0,memoryMatched:0,stageInterstitial:null,practiceReplay:effectivePractice,runStartStage:startStage};
     el.sparks.textContent=String(state.score);el.intro.hidden=true;el.result.hidden=true;el.game.hidden=false;if(isMemoryMission&&startStage===3&&!draft)saveChoiceRun();render();scrollTo({top:0,behavior:'smooth'});
   };
   const finish = (practiceOnly=false) => {

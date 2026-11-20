@@ -50,7 +50,7 @@
     host.innerHTML = `<div class="listen-build" data-listen-build>
       <div class="listen-build-toolbar">
         <button class="play-word" type="button" data-build-play>Play pronunciation</button>
-        <span>Listen &amp; Build!</span>
+        <span>Listen &amp; Build!</span>${options.recordedOnly ? '<p data-recording-status role="status" hidden></p>' : ''}
       </div>
       <div class="build-lane" data-build-lane aria-label="Your word"></div>
       <div class="build-letter-bank" data-build-bank aria-label="Mixed letters"></div>
@@ -106,11 +106,20 @@
       if (!button || solved || locked) return;
       const item = bank.find((entry) => entry.id === button.dataset.buildLetter);
       if (!item || selected.some((entry) => entry.id === item.id)) return;
+      if (options.onWrongLetter && item.letter.toLowerCase() !== model.letters[selected.length]?.letter.toLowerCase()) {
+        letterBank.querySelector('.is-wrong-letter')?.classList.remove('is-wrong-letter');
+        button.classList.add('is-wrong-letter');
+        options.onWrongLetter(item.letter);
+        return;
+      }
       selected.push(item); draw();
     });
     undo.addEventListener('click', () => { if (!solved && !locked) { selected.pop(); draw(); } });
     clear.addEventListener('click', () => { if (!solved && !locked) { selected = []; draw(); } });
-    play.addEventListener('click', () => playPronunciation(model.answer, options.audioUrl));
+    play.addEventListener('click', () => {
+      if (options.recordedOnly) window.VOCABULARY_AUDIO.playRecordingFrom(options.audioUrl, host.querySelector('[data-recording-status]'));
+      else playPronunciation(model.answer, options.audioUrl);
+    });
 
     const newAttempt = () => {
       const previousBank = bank;

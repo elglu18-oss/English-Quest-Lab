@@ -11,8 +11,8 @@
     'food-and-drink': 'food',
     food: 'food',
     containers: 'containers',
-    'household-chores': 'household-chores',
-    'personality-adjectives': 'personality-adjectives'
+    'household-chores': 'unit1/household-chores',
+    'personality-adjectives': 'unit1/personality-adjectives'
   };
 
   const slug = (value) => String(value)

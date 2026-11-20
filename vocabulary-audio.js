@@ -64,6 +64,43 @@
     return true;
   };
 
+  const playRecording = async (audioUrl) => {
+    stop();
+    if (!audioUrl) return false;
+    const request = generation;
+    let audio;
+    let duckToken;
+    const release = () => {
+      if (activeAudio !== audio) return;
+      activeAudio = null;
+      endDuck(duckToken);
+    };
+    try {
+      audio = new Audio(audioUrl);
+      duckToken = startDuck();
+      activeAudio = audio;
+      audio.addEventListener('ended', release, { once: true });
+      audio.addEventListener('error', release, { once: true });
+      await audio.play();
+      return request === generation;
+    } catch {
+      release();
+      return false;
+    }
+  };
+
+  const playRecordingFrom = async (audioUrl, status) => {
+    status.hidden = true;
+    const playback = playRecording(audioUrl);
+    const request = generation;
+    const started = await playback;
+    if (!started && request === generation && status.isConnected) {
+      status.textContent = 'Recording did not play. Tap Play pronunciation to try again.';
+      status.hidden = false;
+    }
+    return started;
+  };
+
   const schedule = (text, audioUrl, delay = 180) => {
     stop();
     const currentGeneration = generation;
@@ -78,5 +115,5 @@
     <span>Listen Again</span>
   </button>`;
 
-  window.VOCABULARY_AUDIO = { play, schedule, stop, buttonMarkup };
+  window.VOCABULARY_AUDIO = { play, playRecording, playRecordingFrom, schedule, stop, buttonMarkup };
 })();
