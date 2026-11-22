@@ -50,12 +50,12 @@
     return { completedStages, totalStages, minimumStages, unlocked: completedStages >= minimumStages };
   };
   const mistakes = (answers) => (Array.isArray(answers)?answers:[]).filter((answer)=>!answer.correct);
-  const attemptKey = (attempt) => `${attempt?.completedAt||''}|${Number(attempt?.score)||0}|${Number(attempt?.correct)||0}`;
+  const attemptKey = (attempt) => String(attempt?.attemptId||`${attempt?.completedAt||''}|${Number(attempt?.score)||0}|${Number(attempt?.correct)||0}`);
   const mergeResult = (oldGame, attempt) => {
     const {activeRun,...old}=oldGame||{},history=[...(Array.isArray(old.completedAttempts)?old.completedAttempts:[]),old.firstCompletedAttempt,old.bestCompletedAttempt,old.lastAttempt,attempt].filter(Boolean),seen=new Set();
-    const completedAttempts=history.filter((item)=>{const key=attemptKey(item);if(seen.has(key))return false;seen.add(key);return true;}).slice(-20);
+    const completedAttempts=history.filter((item)=>{const key=attemptKey(item);if(seen.has(key))return false;seen.add(key);return true;});
     const bestCompletedAttempt=completedAttempts.reduce((best,item)=>!best||Number(item.score)>Number(best.score)?item:best,null);
     return {...old,completed:true,firstCompletedAttempt:old.firstCompletedAttempt||attempt,bestCompletedAttempt,completedAttempts,bestScore:Math.max(Number(old.bestScore)||0,attempt.score),bestCorrect:Math.max(Number(old.bestCorrect)||0,attempt.correct),lastAttempt:attempt,plays:(Number(old.plays)||0)+1,completedAt:attempt.completedAt};
   };
-  window.UNIT1_FINAL_VOCABULARY = { TASKS, STAGES, REQUIREMENTS, shuffle, createPlan, compactPlan, restorePlan, normalize, isCorrect, grade, band, stageProgress, mistakes, mergeResult };
+  window.UNIT1_FINAL_VOCABULARY = { TASKS, STAGES, REQUIREMENTS, shuffle, createPlan, compactPlan, restorePlan, normalize, isCorrect, grade, band, stageProgress, mistakes, attemptKey, mergeResult };
 })();

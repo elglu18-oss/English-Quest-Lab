@@ -22,8 +22,9 @@
     const destroy=()=>{if(destroyed)return;pause(false);destroyed=true;started=false;doc?.removeEventListener?.('visibilitychange',onVisibility);['pointerdown','keydown','touchstart'].forEach((event)=>target?.removeEventListener?.(event,onActivity));target?.removeEventListener?.('pagehide',onPageHide);};
     return {start,stop,pause,resume,touch,elapsedMs,destroy,isRunning:()=>activeSince!==null,isStarted:()=>started};
   };
-  const durationSeconds=(milliseconds)=>Math.max(0,Math.round((Number(milliseconds)||0)/1000));
-  const clock=(seconds)=>{if(!Number.isFinite(Number(seconds)))return 'Not recorded';const value=Math.max(0,Math.round(Number(seconds))),minutes=Math.floor(value/60);return `${String(minutes).padStart(2,'0')}:${String(value%60).padStart(2,'0')}`;};
-  const long=(seconds)=>{if(!Number.isFinite(Number(seconds)))return 'Not recorded';const value=Math.max(0,Math.round(Number(seconds))),minutes=Math.floor(value/60);return `${minutes} min ${value%60} sec`;};
-  window.UNIT1_FINAL_TIMER={IDLE_MS,create,durationSeconds,clock,long};
+  const validNumber=(value)=>value!==null&&value!==undefined&&value!==''&&Number.isFinite(Number(value))&&Number(value)>=0;
+  const durationSeconds=(milliseconds)=>validNumber(milliseconds)?Math.max(0,Math.round(Number(milliseconds)/1000)):null;
+  const clock=(seconds)=>{if(!validNumber(seconds))return 'Not recorded';const value=Math.max(0,Math.round(Number(seconds))),minutes=Math.floor(value/60);return `${String(minutes).padStart(2,'0')}:${String(value%60).padStart(2,'0')}`;};
+  const long=(seconds)=>{if(!validNumber(seconds))return 'Not recorded';const value=Math.max(0,Math.round(Number(seconds))),minutes=Math.floor(value/60);return `${minutes} min ${value%60} sec`;};
+  window.UNIT1_FINAL_TIMER={IDLE_MS,create,validNumber,durationSeconds,clock,long};
 })();
